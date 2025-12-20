@@ -131,7 +131,7 @@ const channelInfo = {
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
             newsletterJid: settings.newsletterJid,
-            newsletterName: 'SILA TECH',
+            newsletterName: 'WEED TECH',
             serverMessageId: -1
         }
     }
