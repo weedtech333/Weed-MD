@@ -1,7 +1,7 @@
 {
   "name": "𝗪𝗲𝗲𝗱-𝗠𝗗",
-  "description": "Javascript WhatsApp bot made ʙʏ 𝙎𝙞𝙡𝙖-𝙏𝙚𝙘𝙝",
-  "logo": "https://files.catbox.moe/drlc5g.png",
+  "description": "Javascript WhatsApp bot made ʙʏ 𝗪𝗲𝗲𝗱-𝗠𝗗",
+  "logo": "https://files.catbox.moe/clprwz.jpg",
   "keywords": ["𝘞𝘦𝘦𝘥-𝘔𝘋"],
   "success_url": "/",
 
@@ -132,13 +132,13 @@
     "MENU_IMAGE_URL": {
       "description": "add url for mention reply and menu if want.",
       "required": false,
-      "value": "https://files.catbox.moe/drlc5g.png"
+      "value": "https://files.catbox.moe/clprwz.jpg"
     },
     
      "DESCRIPTION": {
       "description": "add caption for menu and other",
       "required": false,
-      "value": "> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ SILA-MD*"
+      "value": "> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ Ｄ𝚎𝚟 𝚆𝚎𝚎𝚍*"
     },
 
       "DELETE_LINKS": {
