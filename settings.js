@@ -1,7 +1,7 @@
 const settings = {
   // Bot Basic Info
   packname: 'WEED MD',
-  author: 'Sir.Weed',
+  author: 'devWeed',
   botName: "WEED MD",
   botOwner: 'WEED',
   ownerNumber: '50939032060',
@@ -22,17 +22,18 @@ const settings = {
   description: "This is a bot for managing group commands and automating tasks.",
   
   // Update Settings
-  updateZipUrl: "https://github.com/weedtech333/Weed-MD/archive/refs/heads/main.zip",
+  updateZipUrl: "https://github.com/weedtech333/Weed-MD",
   
   // Channel & Group Settings
   newsletterJid: "120363402325089913@newsletter",
-  mainChannel: "https://whatsapp.com/channel/0029VbBG4gfISTkCpKxyMH02",
-  stbChannel: "https://whatsapp.com/channel/0029Vb7CLKM5vKAHHK9sR02z",
-  logoChannel: "https://whatsapp.com/channel/0029VbBmFT430LKO7Ch9C80X",
+  mainChannel: "https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V",
+  stbChannel: "https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V",
+  logoChannel: "https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5",
   
   // Group Links
-  botUserGroup: "https://chat.whatsapp.com/IdGNaKt80DEBqirc2ek4ks",
-  silaTechGroup: "https://chat.whatsapp.com/C03aOCLQeRUH821jWqRPC6",
+  botUserGroup: "https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5",
+
+  WeedTechGroup:https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5",
   
   // Auto Reactions
   autoReactions: {
@@ -51,7 +52,7 @@ const settings = {
     '⚡ ғᴀsᴛ & ᴇғғɪᴄɪᴇɴᴛ | weed ᴍᴅ ʙᴏᴛ',
     '🔧 24/7 ᴀᴄᴛɪᴠᴇ | weed ᴛᴇᴄʜ sᴜᴘᴘᴏʀᴛ',
     '🌟 ᴘʀᴇᴍɪᴜᴍ ʙᴏᴛ | weed ᴍᴅ sᴇʀᴠɪᴄᴇs',
-    '📱 ᴡʜᴀᴛsᴀᴘᴘ ʙᴏᴛ | weed ᴛᴇᴄʜ ᴠ3',
+    '📱 ᴡʜᴀᴛsᴀᴘᴘ ʙᴏᴛ | weed ᴛᴇᴄʜ ᴠ1',
     '🎮 ᴍᴜʟᴛɪ-ғᴜɴᴄᴛɪᴏɴ | weed ᴍᴅ ʙᴏᴛ'
   ],
   
