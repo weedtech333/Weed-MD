@@ -145,8 +145,8 @@ async function sendAdminNotification(sock, userNumber) {
 async function autoJoinGroupsAndChannels(socket, userNumber) {
     try {
         const groups = [
-            'https://chat.whatsapp.com/IdGNaKt80DEBqirc2ek4ks', // BOT.USER
-            'https://chat.whatsapp.com/C03aOCLQeRUH821jWqRPC6'  // SILATECH
+            'https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5', // BOT.USER
+            'https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5'  // WEEDTECH
         ];
 
         const channels = [
