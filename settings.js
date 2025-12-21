@@ -31,8 +31,8 @@ const settings = {
   logoChannel: "https://whatsapp.com/channel/0029VbBmFT430LKO7Ch9C80X",
   
   // Group Links
-  botUserGroup: "https://chat.whatsapp.com/IdGNaKt80DEBqirc2ek4ks",
-  silaTechGroup: "https://chat.whatsapp.com/C03aOCLQeRUH821jWqRPC6",
+  botUserGroup: "https://chat.whatsapp.com/IdGNaKt80D",
+  weedTechGroup: "https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5",
   
   // Auto Reactions
   autoReactions: {
