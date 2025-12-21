@@ -62,7 +62,7 @@ setInterval(() => {
 let phoneNumber = "255612491554"
 let owner = JSON.parse(fs.readFileSync('./data/owner.json'))
 
-global.botname = "SILA MD"
+global.botname = "WEED MD"
 global.themeemoji = "•"
 const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code")
 const useMobile = process.argv.includes("--mobile")
@@ -138,7 +138,7 @@ async function startXeonBotInc() {
                             isForwarded: true,
                             forwardedNewsletterMessageInfo: {
                                 newsletterJid: '120363402325089913@newsletter',
-                                newsletterName: 'SILA TECH',
+                                newsletterName: 'WEED TECH',
                                 serverMessageId: -1
                             }
                         }
@@ -231,25 +231,25 @@ async function startXeonBotInc() {
 
             const botNumber = XeonBotInc.user.id.split(':')[0] + '@s.whatsapp.net';
             await XeonBotInc.sendMessage(botNumber, {
-                text: `*╭━━━〔 🐢 𝙎𝙄𝙇𝘼 𝙈𝘿 🐢 〕━━━┈⊷*\n*┃🐢│ 🤖 𝘽𝙊𝙏 𝘾𝙊𝙉𝙉𝙀𝘾𝙏𝙀𝘿 𝙎𝙐𝘾𝘾𝙀𝙎𝙎𝙁𝙐𝙇𝙇𝙔!*\n*┃🐢│*\n*┃🐢│ ⏰ 𝙏𝙞𝙢𝙚: ${new Date().toLocaleString()}*\n*┃🐢│ ✅ 𝙎𝙩𝙖𝙩𝙪𝙨: 𝙊𝙣𝙡𝙞𝙣𝙚 𝙖𝙣𝙙 𝙍𝙚𝙖𝙙𝙮!*\n*┃🐢│*\n*┃🐢│ ✅ 𝙈𝙖𝙠𝙚 𝙨𝙪𝙧𝙚 𝙩𝙤 𝙟𝙤𝙞𝙣 𝙗𝙚𝙡𝙤𝙬 𝙘𝙝𝙖𝙣𝙣𝙚𝙡*\n*╰━━━━━━━━━━━━━━━┈⊷*\n\n> © 𝙋𝙊𝙒𝙀𝙍𝘿 𝘽𝙔 🐢 𝙎𝙄𝙇𝘼`,
+                text: `*╭━━━〔 🎐 𝐖𝐄𝐄𝐃 𝐌𝐃 🎐 〕━━━┈⊷*\n*┃🎀│ 🤖 𝘽𝙊𝙏 𝘾𝙊𝙉𝙉𝙀𝘾𝙏𝙀𝘿 𝙎𝙐𝘾𝘾𝙀𝙎𝙎𝙁𝙐𝙇𝙇𝙔!*\n*┃🎀│*\n*┃🎀│ ⏰ 𝙏𝙞𝙢𝙚: ${new Date().toLocaleString()}*\n*┃🎀│ ✅ 𝙎𝙩𝙖𝙩𝙪𝙨: 𝙊𝙣𝙡𝙞𝙣𝙚 𝙖𝙣𝙙 𝙍𝙚𝙖𝙙𝙮!*\n*┃🎐│*\n*┃🎀│ ✅ 𝙈𝙖𝙠𝙚 𝙨𝙪𝙧𝙚 𝙩𝙤 𝙟𝙤𝙞𝙣 𝙗𝙚𝙡𝙤𝙬 𝙘𝙝𝙖𝙣𝙣𝙚𝙡*\n*╰━━━━━━━━━━━━━━━┈⊷*\n\n> © 𝙋𝙊𝙒𝙀𝙍𝘿 𝘽𝙔 🎀 𝐖𝐄𝐄𝐃 𝐃𝐄𝐕 `,
                 contextInfo: {
                     forwardingScore: 1,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
                         newsletterJid: '120363402325089913@newsletter',
-                        newsletterName: 'SILA TECH',
+                        newsletterName: 'WEED TECH',
                         serverMessageId: -1
                     }
                 }
             });
 
             await delay(1999)
-            console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || 'SILA MD'} ]`)}\n\n`))
+            console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || 'WEED MD'} ]`)}\n\n`))
             console.log(chalk.cyan(`< ================================================== >`))
-            console.log(chalk.magenta(`\n${global.themeemoji || '•'} YT CHANNEL: SILATRIX22`))
-            console.log(chalk.magenta(`${global.themeemoji || '•'} GITHUB: Sila-Md`))
+            console.log(chalk.magenta(`\n${global.themeemoji || '•'} YT CHANNEL: Weed Tech`))
+            console.log(chalk.magenta(`${global.themeemoji || '•'} GITHUB: weedtech333 `))
             console.log(chalk.magenta(`${global.themeemoji || '•'} WA NUMBER: ${owner}`))
-            console.log(chalk.magenta(`${global.themeemoji || '•'} CREDIT: Sir SILA`))
+            console.log(chalk.magenta(`${global.themeemoji || '•'} CREDIT: W𝙴𝙴𝙳 Dev`))
             console.log(chalk.green(`${global.themeemoji || '•'} 🤖 Bot Connected Successfully! ✅`))
         }
         if (connection === 'close') {
