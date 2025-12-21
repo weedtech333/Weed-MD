@@ -18,7 +18,7 @@
   <a href="https://github.com/WeedTech">
     <img title="Author" src="https://img.shields.io/badge/Author-Weed%20Tech-ff004d?style=for-the-badge&logo=github&logoColor=white" />
   </a>
-  <a href="https://whatsapp.com/channel/0029Vb6T8td5K3zQZbsKEU1R">
+  <a href="https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V">
     <img title="Join WhatsApp Channel" src="https://img.shields.io/badge/Join-WhatsApp%20Channel-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
   </a>
 </p>
@@ -43,11 +43,11 @@
 ## ⚙️ Deploy Easily
 
 ### 🔑 Get Your Session ID
-[![FUSÉE-MD SESSION](https://img.shields.io/badge/FUSÉE%20-MD%20SESSION-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://fusee-session-id.onrender.com)
+[![WEED MD SESSION](https://img.shields.io/badge/FUSÉE%20-MD%20SESSION-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://fusee-session-id.onrender.com)
 
 
 ### 🔑 Get PAIR CODE
-[![FUSÉE-MD PAIR](https://img.shields.io/badge/FUSÉE%20-MD%20SESSION-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://fusee-session-id.onrender.com)
+[![WEED-MD PAIR](https://img.shields.io/badge/FUSÉE%20-MD%20SESSION-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://fusee-session-id.onrender.com)
 
 
 ---
@@ -55,7 +55,7 @@
 ### 🚀 Fork This Repo
 
 <p align="center">
-  <a href="https://github.com/WeedTech/FUSÉE-MD/fork">
+  <a href=https://github.com/weedtech333/Weed-MD/fork">
     <img src="https://img.shields.io/badge/Fork%20This-Repository-8A2BE2?style=for-the-badge&logo=github&logoColor=white" />
   </a>
 </p>
@@ -97,59 +97,3 @@
     <img src="https://img.shields.io/badge/Download%20Bot-file-FF009D?style=for-the-badge&logo=github&logoColor=white" alt="Download Bot File" />
   </a>
 </p>
-
----
-
-``` DEPLOY ON WORKFLOW ⚡
-
-name: Node.js CI
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  schedule:
-    - cron: '0 */6 * * *'  
-
-jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Install FFmpeg
-      run: sudo apt-get install -y ffmpeg
-
-    - name: Start application with timeout
-      run: |
-        timeout 21590s npm start  # Limite l'exécution à 5h 59m 50s
-
-    - name: Save state (Optional)
-      run: |
-        ./save_state.sh
-
-```
-
-## ❤️ Credits
-[![GitHub - Weed-Tech](https://img.shields.io/badge/GitHub-Weed-Tech-181717?style=for-the-badge&logo=github)](https://github.com/WeedTech)
-
----
-[![ THANKS TO WEED-TECH](https://img.shields.io/badge/GitHub-Weed-Tech-181717?style=for-the-badge&logo=github)](https://github.com/WeedTech)
