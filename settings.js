@@ -27,11 +27,11 @@ const settings = {
   // Channel & Group Settings
   newsletterJid: "120363402325089913@newsletter",
   mainChannel: "https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V",
-  stbChannel: "https://whatsapp.com/channel/0029Vb7CLKM5vKAHHK9sR02z",
-  logoChannel: "https://whatsapp.com/channel/0029VbBmFT430LKO7Ch9C80X",
+  stbChannel: "https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V",
+  logoChannel: "https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V",
   
   // Group Links
-  botUserGroup: "https://chat.whatsapp.com/IdGNaKt80D",
+  botUserGroup: "https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5",
   weedTechGroup: "https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5",
   
   // Auto Reactions
