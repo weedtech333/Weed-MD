@@ -372,7 +372,7 @@ async function handleChatbotResponse(sock, chatId, message, userMessage, senderI
 async function getAIResponse(userMessage, userContext) {
     try {
         const prompt = `
-You're SILA MD chatbot. Respond in Swahili or English based on user's language.
+You're WEED MD chatbot. Respond in Swahili or English based on user's language.
 
 RULES:
 1. Use natural emojis 😊😂🤔
@@ -394,7 +394,7 @@ EMOTIONAL RESPONSES:
 - If casual: Chat naturally
 
 ABOUT YOU:
-- You're SILA MD WhatsApp bot
+- You're WEED MD WhatsApp bot
 - You're helpful and friendly
 - You understand Swahili and English
 
