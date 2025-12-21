@@ -22,11 +22,11 @@ const settings = {
   description: "This is a bot for managing group commands and automating tasks.",
   
   // Update Settings
-  updateZipUrl: "https://github.com/Sila-Md/SILA-MD/archive/refs/heads/main.zip",
+  updateZipUrl: "https://github.com/weedtech333/Weed-MD",
   
   // Channel & Group Settings
   newsletterJid: "120363402325089913@newsletter",
-  mainChannel: "https://whatsapp.com/channel/0029VbBG4gfISTkCpKxyMH02",
+  mainChannel: "https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V",
   stbChannel: "https://whatsapp.com/channel/0029Vb7CLKM5vKAHHK9sR02z",
   logoChannel: "https://whatsapp.com/channel/0029VbBmFT430LKO7Ch9C80X",
   
@@ -36,23 +36,23 @@ const settings = {
   
   // Auto Reactions
   autoReactions: {
-    adminReaction: "🐢",
+    adminReaction: "🐲",
     channelReaction: ["❤️", "🔥", "😍", "👍", "🎉", "🚀", "💯", "👑", "⭐", "💫"],
     userReaction: ["👍", "❤️", "😊", "😂", "🎈", "👏", "💝", "🤝", "🙌", "💖"]
   },
   
   // Auto Bio - 10 fupi fupi random
   autoBio: [
-    '🐢 sɪʟᴀ ᴍᴅ ʙᴏᴛ | ᴘᴏᴡᴇʀᴇᴅ ʙʏ sɪʟᴀ ᴛᴇᴄʜ',
-    '🤖 ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ᴀssɪsᴛᴀɴᴛ | sɪʟᴀ ᴍᴅ ᴠ3',
-    '🚀 ʙᴏᴛ ᴀᴄᴛɪᴠᴇ | sɪʟᴀ ᴛᴇᴄʜ sᴇʀᴠɪᴄᴇs',
-    '💫 sɪʟᴀ ᴍᴅ ᴍɪɴɪ | ɢʀᴏᴜᴘ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ',
-    '🎯 ᴀɪ ᴘᴏᴡᴇʀᴇᴅ ʙᴏᴛ | sɪʟᴀ ᴛᴇᴄʜ',
-    '⚡ ғᴀsᴛ & ᴇғғɪᴄɪᴇɴᴛ | sɪʟᴀ ᴍᴅ ʙᴏᴛ',
-    '🔧 24/7 ᴀᴄᴛɪᴠᴇ | sɪʟᴀ ᴛᴇᴄʜ sᴜᴘᴘᴏʀᴛ',
-    '🌟 ᴘʀᴇᴍɪᴜᴍ ʙᴏᴛ | sɪʟᴀ ᴍᴅ sᴇʀᴠɪᴄᴇs',
-    '📱 ᴡʜᴀᴛsᴀᴘᴘ ʙᴏᴛ | sɪʟᴀ ᴛᴇᴄʜ ᴠ3',
-    '🎮 ᴍᴜʟᴛɪ-ғᴜɴᴄᴛɪᴏɴ | sɪʟᴀ ᴍᴅ ʙᴏᴛ'
+    '🐲 ᴡᴇᴇᴅ ᴍᴅ ʙᴏᴛ | ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴡᴇᴇᴅ ᴛᴇᴄʜ',
+    '🤖 ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ᴀssɪsᴛᴀɴᴛ | ᴡᴇᴇᴅ ᴍᴅ ᴠ1',
+    '🚀 ʙᴏᴛ ᴀᴄᴛɪᴠᴇ | ᴡᴇᴇᴅ ᴛᴇᴄʜ sᴇʀᴠɪᴄᴇs',
+    '💫 ᴡᴇᴇᴅ ᴍᴅ ᴍɪɴɪ | ɢʀᴏᴜᴘ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ',
+    '🎯 ᴀɪ ᴘᴏᴡᴇʀᴇᴅ ʙᴏᴛ | ᴡᴇᴇᴅ ᴛᴇᴄʜ',
+    '⚡ ғᴀsᴛ & ᴇғғɪᴄɪᴇɴᴛ | ᴡᴇᴇᴅ ᴍᴅ ʙᴏᴛ',
+    '🔧 24/7 ᴀᴄᴛɪᴠᴇ | ᴡᴇᴇᴅ ᴛᴇᴄʜ sᴜᴘᴘᴏʀᴛ',
+    '🌟 ᴘʀᴇᴍɪᴜᴍ ʙᴏᴛ | ᴡᴇᴇᴅ ᴍᴅ sᴇʀᴠɪᴄᴇs',
+    '📱 ᴡʜᴀᴛsᴀᴘᴘ ʙᴏᴛ | ᴡᴇᴇᴅ ᴛᴇᴄʜ ᴠ1',
+    '🎮 ᴍᴜʟᴛɪ-ғᴜɴᴄᴛɪᴏɴ | ᴡᴇᴇᴅ ᴍᴅ ʙᴏᴛ'
   ],
   
   // Auto Replies
@@ -65,7 +65,7 @@ const settings = {
     'boss': '𝚈𝚎𝚜 𝚋𝚘𝚜𝚜! 👑 𝙷𝚘𝚠 𝚌𝚊𝚗 𝙸 𝚑𝚎𝚕𝚙 𝚢𝚘𝚞?',
     'habari': '𝙽𝚣𝚞𝚛𝚒 𝚜𝚊𝚗𝚊! 👋 𝙷𝚊𝚋𝚊𝚛𝚒 𝚢𝚊𝚔𝚘?',
     'hello': '𝙷𝚒 𝚝𝚑𝚎𝚛𝚎! 😊 𝚄𝚜𝚎 .𝚖𝚎𝚗𝚞 𝚝𝚘 𝚜𝚎𝚎 𝚊𝚕𝚕 𝚊𝚟𝚊𝚒𝚕𝚊𝚋𝚕𝚎 𝚌𝚘𝚖𝚖𝚊𝚗𝚍𝚜.',
-    'bot': '𝚈𝚎𝚜, 𝙸 𝚊𝚖 𝚂𝙸𝙻𝙰 𝙼𝙳 𝙼𝙸𝙽𝙸! 🤖 𝙷𝚘𝚠 𝚌𝚊𝚗 𝙸 𝚊𝚜𝚜𝚒𝚜𝚝 𝚢𝚘𝚞?',
+    'bot': '𝚈𝚎𝚜, 𝙸 𝚊𝚖 ᴡᴇᴇᴅ 𝙼𝙳 𝙼𝙸𝙽𝙸! 🤖 𝙷𝚘𝚠 𝚌𝚊𝚗 𝙸 𝚊𝚜𝚜𝚒𝚜𝚝 𝚢𝚘𝚞?',
     'menu': '𝚃𝚢𝚙𝚎 .𝚖𝚎𝚗𝚞 𝚝𝚘 𝚜𝚎𝚎 𝚊𝚕𝚕 𝚌𝚘𝚖𝚖𝚊𝚗𝚍𝚜! 📜',
     'owner': '𝙲𝚘𝚗𝚝𝚊𝚌𝚝 𝚘𝚠𝚗𝚎𝚛 𝚞𝚜𝚒𝚗𝚐 .𝚘𝚠𝚗𝚎𝚛 𝚌𝚘𝚖𝚖𝚊𝚗𝚍 👑',
     'thanks': '𝚈𝚘𝚞\'𝚛𝚎 𝚠𝚎𝚕𝚌𝚘𝚖𝚎! 😊',
