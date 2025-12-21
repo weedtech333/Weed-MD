@@ -33,7 +33,7 @@ const settings = {
   // Group Links
   botUserGroup: "https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5",
 
-  WeedTechGroup:https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5",
+botUserGroup:https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5",
   
   // Auto Reactions
   autoReactions: {
