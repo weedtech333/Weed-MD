@@ -221,8 +221,7 @@ async function helpCommand(sock, chatId, message, pushname, config) {
 
 *𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝚆𝙴𝙴𝙳 𝙼𝙳*`;
 
-    try {
-        const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
+    try {const imageUrl = "https://files.catbox.moe/clprwz.jpg";');
         
         if (fs.existsSync(imagePath)) {
             const imageBuffer = fs.readFileSync(imagePath);
