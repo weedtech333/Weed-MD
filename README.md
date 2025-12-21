@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">✨ THE NEXT GEN WHATSAPP BOT ✨<br>BY WeedTech</h1>
+<h1 align="center">☣️ THE NEXT GEN WHATSAPP BOT ☣️<br>BY WeedTech</h1>
 
 ---
 
