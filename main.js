@@ -122,7 +122,7 @@ const soraCommand = require('./commands/sora');
 global.packname = settings.packname;
 global.author = settings.author;
 global.channelLink = settings.mainChannel;
-global.ytch = "silatrix22";
+global.ytch = "weedtech333";
 
 // Channel info with updated JID
 const channelInfo = {
