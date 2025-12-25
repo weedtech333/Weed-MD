@@ -234,7 +234,7 @@ async function helpCommand(sock, chatId, message, pushname, config) {
                     forwardingScore: 1,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363402325089913@newsletter',
+                        newsletterJid: '120363023036831570@newsletter',
                         newsletterName: 'WEED MD,
                         serverMessageId: -1
                     }
@@ -248,7 +248,7 @@ async function helpCommand(sock, chatId, message, pushname, config) {
                     forwardingScore: 1,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363402325089913@newsletter',
+                        newsletterJid: '120363023036831570@newsletter',
                         newsletterName: '</> 𝚆𝙴𝙴𝙳 𝚃𝙴𝙲𝙷 </>',
                         serverMessageId: -1
                     } 
