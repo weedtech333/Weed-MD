@@ -26,9 +26,9 @@ const settings = {
   
   // Channel & Group Settings
   newsletterJid: "120363402325089913@newsletter",
-  mainChannel: "https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V",
-  stbChannel: "https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V",
-  logoChannel: "https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V",
+  mainChannel: "",
+  stbChannel: "",
+  logoChannel: "",
   
   // Group Links
   botUserGroup: "https://chat.whatsapp.com/Kwjc7qLtxDbCvBfVragPg5",
