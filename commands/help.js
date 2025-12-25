@@ -249,7 +249,7 @@ async function helpCommand(sock, chatId, message, pushname, config) {
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
                         newsletterJid: '120363402325089913@newsletter',
-                        newsletterName: 'WEED TECH',
+                        newsletterName: '</> 𝚆𝙴𝙴𝙳 𝚃𝙴𝙲𝙷 </>',
                         serverMessageId: -1
                     } 
                 }
