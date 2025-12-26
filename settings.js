@@ -25,7 +25,7 @@ const settings = {
   updateZipUrl: "https://github.com/weedtech333/Weed-MD",
   
   // Channel & Group Settings
-  newsletterJid: "120363402325089913@newsletter",
+  newsletterJid: "120363407561123100@newsletter",
   mainChannel: "",
   stbChannel: "",
   logoChannel: "",
