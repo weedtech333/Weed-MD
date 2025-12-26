@@ -72,7 +72,7 @@ module.exports = {
                 // Send the processed image
                 await sock.sendMessage(chatId, {
                     image: response.data,
-                    caption: '✨ *Background removed successfully!*\n\n𝗣𝗥𝗢𝗖𝗘𝗦𝗦𝗘𝗗 𝗕𝗬 𝗪𝗲𝗲𝗱-𝗠𝗗'
+                    caption: '✨ *Background removed successfully!*\n\n𝙿𝚁𝙾𝙲𝙴𝚂𝚂𝙴𝙳 Ⴆყ 𝗪𝗘𝗘𝗗-𝗠𝗗'
                 }, { quoted: message });
             } else {
                 throw new Error('Failed to process image');
