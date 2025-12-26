@@ -113,12 +113,12 @@ async function instagramCommand(sock, chatId, message) {
                     await sock.sendMessage(chatId, {
                         video: { url: mediaUrl },
                         mimetype: "video/mp4",
-                        caption: "𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗𝗘𝗗 𝗕𝗬 𝗪𝗲𝗲𝗱-𝗠𝗗 𝗕𝗢𝗧"
+                        caption: "𝙿𝚘𝚠𝚎𝚛𝚎𝚍 ꪉꪗ 𝚆𝚎𝚎𝚍 𝙼𝙳"
                     }, { quoted: message });
                 } else {
                     await sock.sendMessage(chatId, {
                         image: { url: mediaUrl },
-                        caption: "𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗𝗘𝗗 𝗕𝗬 𝗪𝗲𝗲𝗱 𝗠𝗗"
+                        caption: "𝙿𝚘𝚠𝚎𝚛𝚎𝚍 ꪉꪗ 𝚆𝚎𝚎𝚍 𝙼𝙳"
                     }, { quoted: message });
                 }
                 
