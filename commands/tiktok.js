@@ -91,7 +91,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       await m.reply('📥 *Downloading TikTok video...*')
       
       const caption = `
-      ≡ *WEEDMD TIKTOK DL*
+      ≡ *WEED MD TIKTOK DL*
       
       ▢ *Filename:* ${filename}
       `
