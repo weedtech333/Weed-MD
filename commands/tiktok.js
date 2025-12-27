@@ -1,125 +1,177 @@
-import fetch from 'node-fetch'
+const axios = require('axios');
+const { pipeline } = require('stream');
+const { promisify } = require('util');
+const streamPipeline = promisify(pipeline);
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 
-let handler = async (m, { conn, args, usedPrefix, command }) => {
-  if (!args[0]) throw `✳️ Example:\n${usedPrefix + command} https://www.tiktok.com/@username/video/1234567890123456789`
-  
-  if (!/https?:\/\/(www\.|vm\.|vt\.)?tiktok\.com/i.test(args[0]))
-    throw `❎ Please provide a valid TikTok URL`
+module.exports = {
+    commands: ['tiktok', 'tt', 'ttdl', 'tiktokdl'],
+    handler: async ({ sock, m, sender, args, contextInfo = {} }) => {
+        try {
+            // Extract URL from message
+            const url = args[0]?.match(/(https?:\/\/[^\s]+)/)?.[0];
+            
+            // Validate URL
+            if (!url || !/tiktok\.com|vt\.tiktok\.com/.test(url)) {
+                return await sock.sendMessage(sender, {
+                    text: '❌ Invalid TikTok URL!\nPlease provide a valid TikTok link.\n\nExample: .tiktok https://vt.tiktok.com/ZSje1Vkup/',
+                    contextInfo
+                }, { quoted: m });
+            }
 
-  m.react(rwait)
-  
-  try {
-    const apiUrl = `https://api.mobahub.com/`
-    
-    const headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-    
-    if (process.env.COBALT_API_KEY) {
-      headers['Authorization'] = `Api-Key ${process.env.COBALT_API_KEY}`
-    }
-    
-    const requestBody = {
-      url: args[0],
-      filenameStyle: 'pretty',
-      videoQuality: 'max',
-      downloadMode: 'auto',
-      tiktokFullAudio: true 
-    }
-    
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(requestBody)
-    })
-    
-    const data = await response.json()
-    
-    if (data.status === 'error') {
-      throw new Error(`API error: ${data.error.code}`)
-    }
-    
-    if (data.status === 'picker') {
-      await m.reply(`✅ *Found ${data.picker.length} media items!*\n\n📤 *Downloading now...*`)
-      
-      if (data.audio) {
-        await conn.sendFile(
-          m.chat, 
-          data.audio, 
-          data.audioFilename || 'tiktok-audio.mp3', 
-          '🎵 *TikTok Original Sound*', 
-          m,
-          false,
-          { mimetype: 'audio/mp3' }
-        )
-      }
-      
-      for (let i = 0; i < data.picker.length; i++) {
-        const item = data.picker[i]
-        
-        if (item.type === 'video') {
-          await conn.sendFile(
-            m.chat, 
-            item.url, 
-            `tiktok-video-${i+1}.mp4`, 
-            `📹 *TikTok Video ${i + 1}/${data.picker.length}*`, 
-            m,
-            false,
-            { mimetype: 'video/mp4' }
-          )
-        } else if (item.type === 'photo' || item.type === 'gif') {
-          const mimetype = item.type === 'gif' ? 'image/gif' : 'image/jpeg'
-          const extension = item.type === 'gif' ? 'gif' : 'jpg'
-          
-          await conn.sendFile(
-            m.chat, 
-            item.url, 
-            `tiktok-${item.type}-${i+1}.${extension}`, 
-            `🖼️ *TikTok ${item.type} ${i + 1}/${data.picker.length}*`, 
-            m,
-            false,
-            { mimetype: mimetype }
-          )
+            // Processing message
+            await sock.sendMessage(sender, {
+                text: '⏳ Processing TikTok content... (This may take 10-20 seconds)',
+                contextInfo
+            }, { quoted: m });
+
+            // Multiple API endpoints with proper error handling
+            const apiEndpoints = [
+                {
+                    name: 'Tiklydown V1',
+                    url: `https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`,
+                    handler: (data) => {
+                        if (!data) return null;
+                        return data.videoUrl ? {
+                            videoUrl: data.videoUrl.replace(/watermark=1/, 'watermark=0'),
+                            author: data.author,
+                            stats: data.stats
+                        } : null;
+                    }
+                },
+                {
+                    name: 'TikWM API',
+                    url: `https://tikwm.com/api/?url=${encodeURIComponent(url)}`,
+                    handler: (data) => {
+                        if (!data?.data) return null;
+                        return {
+                            videoUrl: data.data.play,
+                            author: data.data.author,
+                            stats: {
+                                digg_count: data.data.digg_count,
+                                comment_count: data.data.comment_count
+                            }
+                        };
+                    }
+                },
+                {
+                    name: 'Snaptik',
+                    url: `https://snaptik.app/abc2.php?url=${encodeURIComponent(url)}`,
+                    handler: (data) => {
+                        if (!data?.video_url) return null;
+                        return {
+                            videoUrl: data.video_url,
+                            author: { nickname: data.author_name },
+                            stats: {
+                                digg_count: data.likes_count,
+                                comment_count: data.comments_count
+                            }
+                        };
+                    }
+                }
+            ];
+
+            let result = null;
+            let tempFilePath = null;
+
+            // Try each API endpoint with proper timeout and abort control
+            for (const endpoint of apiEndpoints) {
+                try {
+                    const controller = new AbortController();
+                    const timeout = setTimeout(() => controller.abort(), 25000); // 25s timeout
+
+                    console.log(`Trying ${endpoint.name}...`);
+                    const response = await axios.get(endpoint.url, {
+                        signal: controller.signal,
+                        headers: {
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
+                            'Accept': 'application/json'
+                        }
+                    });
+                    clearTimeout(timeout);
+
+                    result = endpoint.handler(response.data);
+                    if (result) {
+                        console.log(`Success with ${endpoint.name}`);
+                        break;
+                    }
+                } catch (err) {
+                    console.error(`${endpoint.name} failed:`, err.message);
+                    continue;
+                }
+            }
+
+            if (!result) {
+                throw new Error('All download methods failed. The video may be private or restricted.');
+            }
+
+            // Create temp file path
+            tempFilePath = path.join(os.tmpdir(), `tiktok_${Date.now()}.mp4`);
+
+            // Download the video with proper error handling
+            try {
+                const response = await axios({
+                    method: 'get',
+                    url: result.videoUrl,
+                    responseType: 'stream',
+                    timeout: 30000
+                });
+
+                const writer = fs.createWriteStream(tempFilePath);
+                await streamPipeline(response.data, writer);
+
+                // Verify file was downloaded
+                const stats = fs.statSync(tempFilePath);
+                if (stats.size < 1024) {
+                    throw new Error('Downloaded file is too small (may be corrupted)');
+                }
+
+                // Send the video file
+                await sock.sendMessage(sender, {
+                    video: fs.readFileSync(tempFilePath),
+                    caption: `🎵 *TikTok Video*\n\n` +
+                             `👤 *Author:* ${result.author?.nickname || 'Unknown'}\n` +
+                             `❤️ *Likes:* ${result.stats?.digg_count || result.stats?.likeCount || 'N/A'}\n` +
+                             `💬 *Comments:* ${result.stats?.comment_count || 'N/A'}\n` +
+                             `🔗 *Original URL:* ${url}\n\n` +
+                             `_Downloaded via Weed MD Bot_`,
+                    contextInfo
+                }, { quoted: m });
+
+            } finally {
+                // Clean up temp file
+                if (tempFilePath && fs.existsSync(tempFilePath)) {
+                    fs.unlinkSync(tempFilePath);
+                }
+            }
+
+        } catch (error) {
+            console.error('❌ TikTok Download Error:', error.message);
+            console.error('Error stack:', error.stack);
+            
+            let errorMessage = `⚠️ Download failed!\nReason: ${error.message}\n\n`;
+            
+            if (error.message.includes('aborted') || error.message.includes('timeout')) {
+                errorMessage += `The download was interrupted. This could be because:\n` +
+                               `1. The server took too long to respond\n` +
+                               `2. Your internet connection is unstable\n` +
+                               `3. The video is too large\n\n` +
+                               `Try again with a shorter video or check your connection.`;
+            } else {
+                errorMessage += `Possible solutions:\n` +
+                               `1. Try again later\n` +
+                               `2. Use a different URL\n` +
+                               `3. The video may be private/restricted\n` +
+                               `4. Try a shorter video\n` +
+                               `5. Server may be temporarily down`;
+            }
+
+            await sock.sendMessage(sender, {
+                text: errorMessage,
+                contextInfo
+            }, { quoted: m });
         }
-      }
-    } 
-    else if (data.status === 'redirect' || data.status === 'tunnel') {
-      const mediaUrl = data.url
-      const filename = data.filename || 'tiktok-video.mp4'
-      
-      await m.reply('📥 *Downloading TikTok video...*')
-      
-      const caption = `
-      ≡ *WEED MD TIKTOK DL*
-      
-      ▢ *Filename:* ${filename}
-      `
-      
-      await conn.sendFile(
-        m.chat, 
-        mediaUrl, 
-        filename, 
-        caption, 
-        m, 
-        false, 
-        { mimetype: filename.endsWith('.mp4') ? 'video/mp4' : 'image/jpeg' }
-      )
-    } else {
-      throw new Error(`Unexpected response status: ${data.status}`)
     }
-
-    m.react(done)
-  } catch (error) {
-    console.error('TikTok download error:', error)
-    m.react(error)
-    m.reply(`❎ Error: ${error.message}`)
-  }
-}
-
-handler.help = ['tiktok']
-handler.tags = ['downloader']
-handler.command = ['tiktok', 'tt', 'tiktokdl', 'ttvid']
-handler.desc = 'Download Tiiktok videos and audio. Reply with the TikTok URL.'
-
-export default handler
+};
