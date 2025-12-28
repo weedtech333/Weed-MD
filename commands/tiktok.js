@@ -1,177 +1,116 @@
 const axios = require('axios');
-const { pipeline } = require('stream');
-const { promisify } = require('util');
-const streamPipeline = promisify(pipeline);
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { pipeline } = require('stream');
+const { promisify } = require('util');
+
+const streamPipeline = promisify(pipeline);
+const { AbortController } = global;
 
 module.exports = {
-    commands: ['tiktok', 'tt', 'ttdl', 'tiktokdl'],
-    handler: async ({ sock, m, sender, args, contextInfo = {} }) => {
-        try {
-            // Extract URL from message
-            const url = args[0]?.match(/(https?:\/\/[^\s]+)/)?.[0];
-            
-            // Validate URL
-            if (!url || !/tiktok\.com|vt\.tiktok\.com/.test(url)) {
-                return await sock.sendMessage(sender, {
-                    text: '❌ Invalid TikTok URL!\nPlease provide a valid TikTok link.\n\nExample: .tiktok https://vt.tiktok.com/ZSje1Vkup/',
-                    contextInfo
-                }, { quoted: m });
-            }
+  commands: ['tiktok', 'tt', 'ttdl', 'tiktokdl'],
+  handler: async ({ sock, m, sender, args, contextInfo = {} }) => {
+    let tempFilePath;
 
-            // Processing message
-            await sock.sendMessage(sender, {
-                text: '⏳ Processing TikTok content... (This may take 10-20 seconds)',
-                contextInfo
-            }, { quoted: m });
+    try {
+      // 🔍 Detect URL anywhere in message
+      const url = args.join(' ').match(/https?:\/\/\S+/)?.[0];
 
-            // Multiple API endpoints with proper error handling
-            const apiEndpoints = [
-                {
-                    name: 'Tiklydown V1',
-                    url: `https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`,
-                    handler: (data) => {
-                        if (!data) return null;
-                        return data.videoUrl ? {
-                            videoUrl: data.videoUrl.replace(/watermark=1/, 'watermark=0'),
-                            author: data.author,
-                            stats: data.stats
-                        } : null;
-                    }
-                },
-                {
-                    name: 'TikWM API',
-                    url: `https://tikwm.com/api/?url=${encodeURIComponent(url)}`,
-                    handler: (data) => {
-                        if (!data?.data) return null;
-                        return {
-                            videoUrl: data.data.play,
-                            author: data.data.author,
-                            stats: {
-                                digg_count: data.data.digg_count,
-                                comment_count: data.data.comment_count
-                            }
-                        };
-                    }
-                },
-                {
-                    name: 'Snaptik',
-                    url: `https://snaptik.app/abc2.php?url=${encodeURIComponent(url)}`,
-                    handler: (data) => {
-                        if (!data?.video_url) return null;
-                        return {
-                            videoUrl: data.video_url,
-                            author: { nickname: data.author_name },
-                            stats: {
-                                digg_count: data.likes_count,
-                                comment_count: data.comments_count
-                            }
-                        };
-                    }
-                }
-            ];
+      if (!url || !/(tiktok\.com|vt\.tiktok\.com)/.test(url)) {
+        return await sock.sendMessage(
+          sender,
+          {
+            text: '❌ *Lien TikTok invalide*\n\nEgzanp:\n.tiktok https://vt.tiktok.com/xxxx',
+            contextInfo
+          },
+          { quoted: m }
+        );
+      }
 
-            let result = null;
-            let tempFilePath = null;
+      await sock.sendMessage(
+        sender,
+        { text: '⏳ *Telechajman an ap fèt... tann yon ti moman*', contextInfo },
+        { quoted: m }
+      );
 
-            // Try each API endpoint with proper timeout and abort control
-            for (const endpoint of apiEndpoints) {
-                try {
-                    const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), 25000); // 25s timeout
+      // 🔁 Resolve redirect (vt.tiktok.com)
+      const resolved = await axios.get(url, { maxRedirects: 5 });
+      const finalUrl = resolved.request.res.responseUrl;
 
-                    console.log(`Trying ${endpoint.name}...`);
-                    const response = await axios.get(endpoint.url, {
-                        signal: controller.signal,
-                        headers: {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
-                            'Accept': 'application/json'
-                        }
-                    });
-                    clearTimeout(timeout);
+      // ✅ Reliable API
+      const apiUrl = `https://tikwm.com/api/?url=${encodeURIComponent(finalUrl)}`;
 
-                    result = endpoint.handler(response.data);
-                    if (result) {
-                        console.log(`Success with ${endpoint.name}`);
-                        break;
-                    }
-                } catch (err) {
-                    console.error(`${endpoint.name} failed:`, err.message);
-                    continue;
-                }
-            }
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
 
-            if (!result) {
-                throw new Error('All download methods failed. The video may be private or restricted.');
-            }
+      const apiRes = await axios.get(apiUrl, {
+        signal: controller.signal,
+        headers: { 'User-Agent': 'Mozilla/5.0' }
+      });
 
-            // Create temp file path
-            tempFilePath = path.join(os.tmpdir(), `tiktok_${Date.now()}.mp4`);
+      clearTimeout(timeout);
 
-            // Download the video with proper error handling
-            try {
-                const response = await axios({
-                    method: 'get',
-                    url: result.videoUrl,
-                    responseType: 'stream',
-                    timeout: 30000
-                });
+      if (!apiRes.data?.data?.play) {
+        throw new Error('API pa retounen video a');
+      }
 
-                const writer = fs.createWriteStream(tempFilePath);
-                await streamPipeline(response.data, writer);
+      const videoUrl = apiRes.data.data.play;
+      const author = apiRes.data.data.author?.nickname || 'Unknown';
 
-                // Verify file was downloaded
-                const stats = fs.statSync(tempFilePath);
-                if (stats.size < 1024) {
-                    throw new Error('Downloaded file is too small (may be corrupted)');
-                }
+      // 📁 Temp file
+      tempFilePath = path.join(os.tmpdir(), `tiktok_${Date.now()}.mp4`);
 
-                // Send the video file
-                await sock.sendMessage(sender, {
-                    video: fs.readFileSync(tempFilePath),
-                    caption: `🎵 *TikTok Video*\n\n` +
-                             `👤 *Author:* ${result.author?.nickname || 'Unknown'}\n` +
-                             `❤️ *Likes:* ${result.stats?.digg_count || result.stats?.likeCount || 'N/A'}\n` +
-                             `💬 *Comments:* ${result.stats?.comment_count || 'N/A'}\n` +
-                             `🔗 *Original URL:* ${url}\n\n` +
-                             `_Downloaded via Weed MD Bot_`,
-                    contextInfo
-                }, { quoted: m });
+      // ⬇️ Download video
+      const videoRes = await axios({
+        method: 'get',
+        url: videoUrl,
+        responseType: 'stream',
+        timeout: 30000
+      });
 
-            } finally {
-                // Clean up temp file
-                if (tempFilePath && fs.existsSync(tempFilePath)) {
-                    fs.unlinkSync(tempFilePath);
-                }
-            }
+      await streamPipeline(videoRes.data, fs.createWriteStream(tempFilePath));
 
-        } catch (error) {
-            console.error('❌ TikTok Download Error:', error.message);
-            console.error('Error stack:', error.stack);
-            
-            let errorMessage = `⚠️ Download failed!\nReason: ${error.message}\n\n`;
-            
-            if (error.message.includes('aborted') || error.message.includes('timeout')) {
-                errorMessage += `The download was interrupted. This could be because:\n` +
-                               `1. The server took too long to respond\n` +
-                               `2. Your internet connection is unstable\n` +
-                               `3. The video is too large\n\n` +
-                               `Try again with a shorter video or check your connection.`;
-            } else {
-                errorMessage += `Possible solutions:\n` +
-                               `1. Try again later\n` +
-                               `2. Use a different URL\n` +
-                               `3. The video may be private/restricted\n` +
-                               `4. Try a shorter video\n` +
-                               `5. Server may be temporarily down`;
-            }
+      if (fs.statSync(tempFilePath).size < 1024) {
+        throw new Error('Video a pa konplè');
+      }
 
-            await sock.sendMessage(sender, {
-                text: errorMessage,
-                contextInfo
-            }, { quoted: m });
-        }
+      // 📤 Send video (safe)
+      await sock.sendMessage(
+        sender,
+        {
+          video: { url: tempFilePath },
+          caption:
+            `🎵 *TikTok Video*\n\n` +
+            `👤 *Author:* ${author}\n` +
+            `🔗 *Link:* ${finalUrl}\n\n` +
+            `_Downloaded via WEED MD_`,
+          contextInfo
+        },
+        { quoted: m }
+      );
+
+    } catch (err) {
+      console.error('TikTok Error:', err.message);
+
+      await sock.sendMessage(
+        sender,
+        {
+          text:
+            `⚠️ *Echèk telechajman*\n\n` +
+            `Rezon: ${err.message}\n\n` +
+            `✔️ Eseye yon lòt video\n` +
+            `✔️ Video a ka prive\n` +
+            `✔️ API a ka okipe`,
+          contextInfo
+        },
+        { quoted: m }
+      );
+
+    } finally {
+      if (tempFilePath && fs.existsSync(tempFilePath)) {
+        fs.unlinkSync(tempFilePath);
+      }
     }
+  }
 };
