@@ -1,56 +1,62 @@
-const os = require('os');
-const settings = require('../settings.js');
+// ================= commands/ping.js =================
+import { contextInfo } from '../system/contextInfo.js';
 
-function formatTime(seconds) {
-    const days = Math.floor(seconds / (24 * 60 * 60));
-    seconds = seconds % (24 * 60 * 60);
-    const hours = Math.floor(seconds / (60 * 60));
-    seconds = seconds % (60 * 60);
-    const minutes = Math.floor(seconds / 60);
-    seconds = Math.floor(seconds % 60);
+export default {
+  name: 'ping',
+  alias: [],
+  category: 'General',
+  description: '🏓 Check the bot latency and status',
+  ownerOnly: false,
+  group: false,
 
-    let time = '';
-    if (days > 0) time += `${days}d `;
-    if (hours > 0) time += `${hours}h `;
-    if (minutes > 0) time += `${minutes}m `;
-    if (seconds > 0 || time === '') time += `${seconds}s`;
-
-    return time.trim();
-}
-
-async function pingCommand(sock, chatId, message) {
+  async run(kaya, m, args) {
     try {
-        // Step 1: Send reaction first
-        await sock.sendMessage(chatId, {
-            react: {
-                text: '🏓', // Emoji ya ping pong
-                key: message.key
-            }
-        });
+      const start = Date.now();
 
-        // Step 2: Calculate ping
-        const start = Date.now();
-        const end = Date.now();
-        const ping = Math.round((end - start) / 2);
+      // Temporary "typing" message
+      const tempMsg = await kaya.sendMessage(
+        m.chat,
+        { text: '⏳ Calculating latency...' },
+        { quoted: m }
+      );
 
-        const uptimeInSeconds = process.uptime();
-        const uptimeFormatted = formatTime(uptimeInSeconds);
+      const end = Date.now();
+      const latency = end - start;
 
-        // Step 3: Send ping result - message tu ya PONG na ms
-        const pingResult = `𝙿𝙾𝙽𝙶! ${ping}𝚖𝚜`;
+      const uptimeSeconds = process.uptime();
+      const hours = Math.floor(uptimeSeconds / 3600);
+      const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+      const seconds = Math.floor(uptimeSeconds % 60);
 
-        await sock.sendMessage(chatId, { 
-            text: pingResult 
-        }, { quoted: message });
+      const response = `
+╭───〔 🏓 PONG 〕───╮
+│ ✅ Status   : *WEED-MD* is online and ready!
+│ ⏱️ Latency : *${latency} ms*
+│ ⚡ Uptime  : *${hours}h ${minutes}m ${seconds}s*
+│ 🚀 Performance : *Ultra fast* ⚡
+╰───────────────────╯
+      `.trim();
 
-    } catch (error) {
-        console.error('Error in ping command:', error);
-        
-        // Send error message simple
-        await sock.sendMessage(chatId, { 
-            text: '𝙴𝚁𝚁𝙾𝚁' 
-        });
+      // Edit the previous message with the final result (if supported)
+      await kaya.sendMessage(
+        m.chat,
+        {
+          text: response,
+          contextInfo: { ...contextInfo, mentionedJid: [m.sender] }
+        },
+        { quoted: m }
+      );
+
+      // Optional: delete the temporary message after sending result
+      // await weed.deleteMessage(m.chat, { id: tempMsg.key.id, remoteJid: m.chat });
+
+    } catch (err) {
+      console.error('❌ Ping command error:', err);
+      await kaya.sendMessage(
+        m.chat,
+        { text: '⚠️ Unable to calculate latency.', contextInfo },
+        { quoted: m }
+      );
     }
-}
-
-module.exports = pingCommand;
+  }
+};
