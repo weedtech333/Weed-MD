@@ -53,7 +53,7 @@ export default {
 
       fs.writeFileSync(filePath, res.data);
 
-      await kaya.sendMessage(
+      await weed.sendMessage(
         m.chat,
         {
           video: { url: filePath },
