@@ -1,62 +1,47 @@
-// ================= commands/ping.js =================
-import { contextInfo } from '../system/contextInfo.js';
+const os = require('os');
+const settings = require('../settings.js');
 
-export default {
-  name: 'ping',
-  alias: [],
-  category: 'General',
-  description: '🏓 Check the bot latency and status',
-  ownerOnly: false,
-  group: false,
+function formatTime(seconds) {
+    const days = Math.floor(seconds / (24 * 60 * 60));
+    seconds = seconds % (24 * 60 * 60);
+    const hours = Math.floor(seconds / (60 * 60));
+    seconds = seconds % (60 * 60);
+    const minutes = Math.floor(seconds / 60);
+    seconds = Math.floor(seconds % 60);
 
-  async run(kaya, m, args) {
+    let time = '';
+    if (days > 0) time += `${days}d `;
+    if (hours > 0) time += `${hours}h `;
+    if (minutes > 0) time += `${minutes}m `;
+    if (seconds > 0 || time === '') time += `${seconds}s`;
+
+    return time.trim();
+}
+
+async function pingCommand(sock, chatId, message) {
     try {
-      const start = Date.now();
+        const start = Date.now();
+        await sock.sendMessage(chatId, { text: 'Pong!' }, { quoted: message });
+        const end = Date.now();
+        const ping = Math.round((end - start) / 2);
 
-      // Temporary "typing" message
-      const tempMsg = await kaya.sendMessage(
-        m.chat,
-        { text: '⏳ Calculating latency...' },
-        { quoted: m }
-      );
+        const uptimeInSeconds = process.uptime();
+        const uptimeFormatted = formatTime(uptimeInSeconds);
 
-      const end = Date.now();
-      const latency = end - start;
+        const botInfo = `
+┏━━〔 𝚆𝚎𝚎𝚍 𝙼𝙳 𝙱𝙾𝚃 〕━━┓
+┃ 🚀 Ping     : ${ping} ms
+┃ ⏱️ Uptime   : ${uptimeFormatted}
+┃ 🔖 Version  : v${settings.version}
+┗━━━━━━━━━━━━━━━━━━━┛`.trim();
 
-      const uptimeSeconds = process.uptime();
-      const hours = Math.floor(uptimeSeconds / 3600);
-      const minutes = Math.floor((uptimeSeconds % 3600) / 60);
-      const seconds = Math.floor(uptimeSeconds % 60);
+        // Reply to the original message with the bot info
+        await sock.sendMessage(chatId, { text: botInfo},{ quoted: message });
 
-      const response = `
-╭───〔 🏓 PONG 〕───╮
-│ ✅ Status   : *WEED-MD* is online and ready!
-│ ⏱️ Latency : *${latency} ms*
-│ ⚡ Uptime  : *${hours}h ${minutes}m ${seconds}s*
-│ 🚀 Performance : *Ultra fast* ⚡
-╰───────────────────╯
-      `.trim();
-
-      // Edit the previous message with the final result (if supported)
-      await kaya.sendMessage(
-        m.chat,
-        {
-          text: response,
-          contextInfo: { ...contextInfo, mentionedJid: [m.sender] }
-        },
-        { quoted: m }
-      );
-
-      // Optional: delete the temporary message after sending result
-      // await weed.deleteMessage(m.chat, { id: tempMsg.key.id, remoteJid: m.chat });
-
-    } catch (err) {
-      console.error('❌ Ping command error:', err);
-      await kaya.sendMessage(
-        m.chat,
-        { text: '⚠️ Unable to calculate latency.', contextInfo },
-        { quoted: m }
-      );
+    } catch (error) {
+        console.error('Error in ping command:', error);
+        await sock.sendMessage(chatId, { text: '❌ Failed to get bot status.' });
     }
-  }
-};
+}
+
+module.exports = pingCommand;
