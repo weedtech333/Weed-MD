@@ -42,75 +42,11 @@ store.readFromFile()
 const settings = require('./settings')
 setInterval(() => store.writeToFile(), settings.storeWriteInterval || 10000)
 
-// Add this function to log messages
-function logMessage(message, direction = 'received') {
-    try {
-        const timestamp = new Date().toLocaleString();
-        const chatId = message.key?.remoteJid || 'unknown';
-        const isChannel = chatId.includes('@newsletter');
-        
-        // Get message content
-        let content = '';
-        if (message.message?.conversation) {
-            content = message.message.conversation;
-        } else if (message.message?.extendedTextMessage?.text) {
-            content = message.message.extendedTextMessage.text;
-        } else if (message.message?.imageMessage?.caption) {
-            content = `[IMAGE] ${message.message.imageMessage.caption}`;
-        } else if (message.message?.videoMessage?.caption) {
-            content = `[VIDEO] ${message.message.videoMessage.caption}`;
-        } else if (message.message?.stickerMessage) {
-            content = '[STICKER]';
-        } else if (message.message?.audioMessage) {
-            content = '[AUDIO]';
-        } else if (message.message?.documentMessage?.fileName) {
-            content = `[DOCUMENT] ${message.message.documentMessage.fileName}`;
-        } else if (message.message?.protocolMessage) {
-            content = '[PROTOCOL MESSAGE]';
-        } else {
-            content = '[OTHER MEDIA]';
-        }
-
-        // Format the log
-        const logEntry = `
-════════════════════════════════════════
-📅 ${timestamp}
-📊 DIRECTION: ${direction === 'received' ? '📥 RECEIVED' : '📤 SENT'}
-💬 CHAT ID: ${chatId}
-${isChannel ? '📢 CHANNEL/NEWSLETTER DETECTED!' : ''}
-${content ? `📝 CONTENT: ${content.substring(0, 200)}${content.length > 200 ? '...' : ''}` : '📝 [NO TEXT CONTENT]'}
-════════════════════════════════════════
-`;
-
-        // Log to console with colors
-        if (direction === 'received') {
-            console.log('\x1b[36m%s\x1b[0m', logEntry); // Cyan for received
-        } else {
-            console.log('\x1b[32m%s\x1b[0m', logEntry); // Green for sent
-        }
-
-        // Also save to log file
-        const logDir = './logs';
-        if (!fs.existsSync(logDir)) {
-            fs.mkdirSync(logDir, { recursive: true });
-        }
-        
-        const date = new Date();
-        const dateStr = `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-        const logFile = path.join(logDir, `messages-${dateStr}.log`);
-        
-        fs.appendFileSync(logFile, logEntry + '\n', 'utf8');
-        
-    } catch (error) {
-        console.error('Error logging message:', error);
-    }
-}
-
 // Memory optimization - Force garbage collection if available
 setInterval(() => {
     if (global.gc) {
         global.gc()
-        console.log('🧹 Memory cleanup completed')
+        console.log('🧹 Garbage collection completed')
     }
 }, 60_000) // every 1 minute
 
@@ -118,16 +54,16 @@ setInterval(() => {
 setInterval(() => {
     const used = process.memoryUsage().rss / 1024 / 1024
     if (used > 400) {
-        console.log('⚠️ High memory usage detected, restarting...')
-        process.exit(1) // Will auto-restart
+        console.log('⚠️ RAM too high (>400MB), restarting bot...')
+        process.exit(1) // Panel will auto-restart
     }
 }, 30_000) // check every 30 seconds
 
-let phoneNumber = "509xxxx"
+let phoneNumber = "50939032060"
 let owner = JSON.parse(fs.readFileSync('./data/owner.json'))
 
-global.botname = "𝗪𝗲𝗲𝗱-𝗠𝗗"
-global.themeemoji = "💫"
+global.botname = "WEED MD"
+global.themeemoji = "•"
 const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code")
 const useMobile = process.argv.includes("--mobile")
 
@@ -142,82 +78,67 @@ const question = (text) => {
     }
 }
 
-async function startWeedMd() {
-    try {
-        let { version, isLatest } = await fetchLatestBaileysVersion()
-        const { state, saveCreds } = await useMultiFileAuthState(`./session`)
-        const msgRetryCounterCache = new NodeCache()
 
-        const WeedmdBot = makeWASocket({
-            version,
-            logger: pino({ level: 'silent' }),
-            printQRInTerminal: !pairingCode,
-            browser: ["Ubuntu", "Chrome", "20.0.04"],
-            auth: {
-                creds: state.creds,
-                keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
-            },
-            markOnlineOnConnect: true,
-            generateHighQualityLinkPreview: true,
-            syncFullHistory: false,
-            getMessage: async (key) => {
-                let jid = jidNormalizedUser(key.remoteJid)
-                let msg = await store.loadMessage(jid, key.id)
-                return msg?.message || ""
-            },
-            msgRetryCounterCache,
-            defaultQueryTimeoutMs: 60000,
-            connectTimeoutMs: 60000,
-            keepAliveIntervalMs: 10000,
-        })
+async function startXeonBotInc() {
+    let { version, isLatest } = await fetchLatestBaileysVersion()
+    const { state, saveCreds } = await useMultiFileAuthState(`./session`)
+    const msgRetryCounterCache = new NodeCache()
 
-        // Save credentials when they update
-        weedmdBot.ev.on('creds.update', saveCreds)
+    const XeonBotInc = makeWASocket({
+        version,
+        logger: pino({ level: 'silent' }),
+        printQRInTerminal: !pairingCode,
+        browser: ["Ubuntu", "Chrome", "20.0.04"],
+        auth: {
+            creds: state.creds,
+            keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
+        },
+        markOnlineOnConnect: true,
+        generateHighQualityLinkPreview: true,
+        syncFullHistory: true,
+        getMessage: async (key) => {
+            let jid = jidNormalizedUser(key.remoteJid)
+            let msg = await store.loadMessage(jid, key.id)
+            return msg?.message || ""
+        },
+        msgRetryCounterCache,
+        defaultQueryTimeoutMs: undefined,
+    })
 
-    store.bind(ZanitsuBot.ev)
+    store.bind(XeonBotInc.ev)
 
     // Message handling
-    weedmdBot.ev.on('messages.upsert', async chatUpdate => {
+    XeonBotInc.ev.on('messages.upsert', async chatUpdate => {
         try {
             const mek = chatUpdate.messages[0]
             if (!mek.message) return
-            
-            // Log received message
-            if (chatUpdate.type === 'notify' || chatUpdate.type === 'append') {
-                logMessage(mek, 'received');
-            }
-            
             mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
             if (mek.key && mek.key.remoteJid === 'status@broadcast') {
-                await handleStatus(Weedmd, chatUpdate);
+                await handleStatus(XeonBotInc, chatUpdate);
                 return;
             }
-            // In private mode, only block non-group messages (allow groups for moderation)
-            if (!ZanitsuBot.public && !mek.key.fromMe && chatUpdate.type === 'notify') {
-                const isGroup = mek.key?.remoteJid?.endsWith('@g.us')
-                if (!isGroup) return // Block DMs in private mode, but allow group messages
-            }
+            if (!XeonBotInc.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
             if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
 
             // Clear message retry cache to prevent memory bloat
-            if (WeeedmdBot?.msgRetryCounterCache) {
-                WeedmdBot.msgRetryCounterCache.clear()
+            if (XeonBotInc?.msgRetryCounterCache) {
+                XeonBotInc.msgRetryCounterCache.clear()
             }
 
             try {
-                await handleMessages(WeedmdBot, chatUpdate, true)
+                await handleMessages(XeonBotInc, chatUpdate, true)
             } catch (err) {
-                console.error("[WeeedmdBot] Message handler error:", err)
+                console.error("Error in handleMessages:", err)
                 // Only try to send error message if we have a valid chatId
                 if (mek.key && mek.key.remoteJid) {
-                    await WeedmdBot.sendMessage(mek.key.remoteJid, {
-                        text: '🚫 *WeedMd SYSTEM ERROR* 🚫\n\nAn error occurred while processing your request.\nPlease try again.',
+                    await XeonBotInc.sendMessage(mek.key.remoteJid, {
+                        text: '❌ An error occurred while processing your message.',
                         contextInfo: {
                             forwardingScore: 1,
                             isForwarded: true,
                             forwardedNewsletterMessageInfo: {
                                 newsletterJid: '120363407561123100@newsletter',
-                                newsletterName: '𝗪𝗲𝗲𝗱-𝗠𝗗',
+                                newsletterName: 'WEED TECH',
                                 serverMessageId: -1
                             }
                         }
@@ -225,12 +146,12 @@ async function startWeedMd() {
                 }
             }
         } catch (err) {
-            console.error("[WeedmdBot] Error in messages.upsert:", err)
+            console.error("Error in messages.upsert:", err)
         }
     })
 
     // Add these event handlers for better functionality
-    WeedmdBot.decodeJid = (jid) => {
+    XeonBotInc.decodeJid = (jid) => {
         if (!jid) return jid
         if (/:\d+@/gi.test(jid)) {
             let decode = jidDecode(jid) || {}
@@ -238,44 +159,44 @@ async function startWeedMd() {
         } else return jid
     }
 
-    WeedmdBot.ev.on('contacts.update', update => {
+    XeonBotInc.ev.on('contacts.update', update => {
         for (let contact of update) {
-            let id = WeedmdBot.decodeJid(contact.id)
+            let id = XeonBotInc.decodeJid(contact.id)
             if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
         }
     })
 
-    WeedmdBot.getName = (jid, withoutContact = false) => {
-        id = WeedmdBot.decodeJid(jid)
-        withoutContact = WeedmdBot.withoutContact || withoutContact
+    XeonBotInc.getName = (jid, withoutContact = false) => {
+        id = XeonBotInc.decodeJid(jid)
+        withoutContact = XeonBotInc.withoutContact || withoutContact
         let v
         if (id.endsWith("@g.us")) return new Promise(async (resolve) => {
             v = store.contacts[id] || {}
-            if (!(v.name || v.subject)) v = WeedmdBot.groupMetadata(id) || {}
+            if (!(v.name || v.subject)) v = XeonBotInc.groupMetadata(id) || {}
             resolve(v.name || v.subject || PhoneNumber('+' + id.replace('@s.whatsapp.net', '')).getNumber('international'))
         })
         else v = id === '0@s.whatsapp.net' ? {
             id,
             name: 'WhatsApp'
-        } : id === WeedmdBot.decodeJid(WeedmdBot.user.id) ?
-            WeedmdBot.user :
+        } : id === XeonBotInc.decodeJid(XeonBotInc.user.id) ?
+            XeonBotInc.user :
             (store.contacts[id] || {})
         return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
     }
 
-    WeedMd.public = true
+    XeonBotInc.public = true
 
-    WeedmdBot.serializeM = (m) => smsg(WeedmdBot, m, store)
+    XeonBotInc.serializeM = (m) => smsg(XeonBotInc, m, store)
 
     // Handle pairing code
-    if (pairingCode && !WeedmdBot.authState.creds.registered) {
+    if (pairingCode && !XeonBotInc.authState.creds.registered) {
         if (useMobile) throw new Error('Cannot use pairing code with mobile api')
 
         let phoneNumber
         if (!!global.phoneNumber) {
             phoneNumber = global.phoneNumber
         } else {
-            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`\n⚡ *WeedMd SETUP* ⚡\n\n📱 Enter your WhatsApp number:\nFormat: 509xxx (without + or spaces)\n\n👉 Input: `)))
+            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number 😍\nFormat: 6281376552730 (without + or spaces) : `)))
         }
 
         // Clean the phone number - remove any non-digit characters
@@ -284,202 +205,108 @@ async function startWeedMd() {
         // Validate the phone number using awesome-phonenumber
         const pn = require('awesome-phonenumber');
         if (!pn('+' + phoneNumber).isValid()) {
-            console.log(chalk.red('❌ Invalid phone number. Please enter your full international number (e.g., 509xxx for ur country) without + or spaces.'));
+            console.log(chalk.red('Invalid phone number. Please enter your full international number (e.g., 15551234567 for US, 447911123456 for UK, etc.) without + or spaces.'));
             process.exit(1);
         }
 
         setTimeout(async () => {
             try {
-                let code = await WeedmdBot.requestPairingCode(phoneNumber)
+                let code = await XeonBotInc.requestPairingCode(phoneNumber)
                 code = code?.match(/.{1,4}/g)?.join("-") || code
-                
-                console.log(chalk.green('\n' + '═'.repeat(50)))
-                console.log(chalk.white.bold('         ⚡ WeedMd AUTHENTICATION ⚡'))
-                console.log(chalk.green('═'.repeat(50)))
-                console.log(chalk.yellow(`\n📱 Pairing Code:`))
-                console.log(chalk.white.bgBlue(`    ${code}    `))
-                console.log(chalk.green('═'.repeat(50)))
-                console.log(chalk.cyan(`\n📲 Setup Instructions:\n`))
-                console.log(chalk.white(`1. Open WhatsApp on your phone`))
-                console.log(chalk.white(`2. Go to Settings → Linked Devices`))
-                console.log(chalk.white(`3. Tap "Link a Device"`))
-                console.log(chalk.white(`4. Enter the code above`))
-                console.log(chalk.green('═'.repeat(50) + '\n'))
+                console.log(chalk.black(chalk.bgGreen(`Your Pairing Code : `)), chalk.black(chalk.white(code)))
+                console.log(chalk.yellow(`\nPlease enter this code in your WhatsApp app:\n1. Open WhatsApp\n2. Go to Settings > Linked Devices\n3. Tap "Link a Device"\n4. Enter the code shown above`))
             } catch (error) {
-                console.error('❌ Error requesting pairing code:', error)
+                console.error('Error requesting pairing code:', error)
                 console.log(chalk.red('Failed to get pairing code. Please check your phone number and try again.'))
             }
         }, 3000)
     }
 
     // Connection handling
-    WeedmdBot.ev.on('connection.update', async (s) => {
-        const { connection, lastDisconnect, qr } = s
-        
-        if (qr) {
-            console.log(chalk.yellow('📱 QR Code generated. Please scan with WhatsApp.'))
-        }
-        
-        if (connection === 'connecting') {
-            console.log(chalk.yellow('🔄 Connecting to WhatsApp...'))
-        }
-        
+    XeonBotInc.ev.on('connection.update', async (s) => {
+        const { connection, lastDisconnect } = s
         if (connection == "open") {
             console.log(chalk.magenta(` `))
-            console.log(chalk.yellow(`✅ Connected as: ` + JSON.stringify(WeedmdBot.user.id, null, 2)))
+            console.log(chalk.yellow(`🌿Connected to => ` + JSON.stringify(XeonBotInc.user, null, 2)))
 
-            try {
-                const botNumber = WeedmdBot.user.id.split(':')[0] + '@s.whatsapp.net';
-                await WeedmdBot.sendMessage(botNumber, {
-                    text: `⚡ *WeedMd SYSTEM ONLINE* ⚡\n\n` +
-                          `✅ *Status:* Connected Successfully\n` +
-                          `⏰ *Time:* ${new Date().toLocaleString()}\n` +
-                          `📊 *Version:* ${settings.version || '1.0.0'}\n\n` +
-                          `🚀 *System Ready*\n` +
-                          `📥 *Commands:* Active\n` +
-                          `🛡️ *Protection:* Enabled\n\n` +
-                          `⭐ *WeedMd is now online!*`,
-                    contextInfo: {
-                        forwardingScore: 1,
-                        isForwarded: true,
-                        forwardedNewsletterMessageInfo: {
-                            newsletterJid: '120363407561123100@newsletter',
-                            newsletterName: 'Weed MD',
-                            serverMessageId: -1
-                        }
+            const botNumber = XeonBotInc.user.id.split(':')[0] + '@s.whatsapp.net';
+            await XeonBotInc.sendMessage(botNumber, {
+                text: `*╭━━━〔 🤖 𝐖𝐄𝐄𝐃 𝐌𝐃 🤖 〕━━━┈⊷*\n*┃🏷│ 🤖 𝙱𝙾𝚃  𝙲𝙾𝙽𝙽𝙴𝙲𝚃𝙴𝙳 𝚂𝚄𝙲𝙲𝙴𝚂𝚂𝙵𝚄𝙻𝙻𝚈!*\n*┃🏷│*\n*┃🏷│ ⏰ 𝙏𝙞𝙢𝙚: ${new Date().toLocaleString()}*\n*┃🏷│ ✅ 𝙎𝙩𝙖𝙩𝙪𝙨: 𝙊𝙣𝙡𝙞𝙣𝙚 𝙖𝙣𝙙 𝙍𝙚𝙖𝙙𝙮!*\n*┃🎐│*\n*┃🏷│ ✅ 𝙈𝙖𝙠𝙚 𝙨𝙪𝙧𝙚 𝙩𝙤 𝙟𝙤𝙞𝙣 𝙗𝙚𝙡𝙤𝙬 𝙘𝙝𝙖𝙣𝙣𝙚𝙡*\n*╰━━━━━━━━━━━━━━━┈⊷*\n\n> © ᴘᴏᴡᴇʀᴅ ʙʏ 🦩 ᴡᴇᴇᴅ ᴅᴇᴠ `,
+                contextInfo: {
+                    forwardingScore: 1,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363407561123100@newsletter',
+                        newsletterName: 'WEED TECH',
+                        serverMessageId: -1
                     }
-                });
-            } catch (error) {
-                console.error('Error sending connection message:', error.message)
-            }
+                }
+            });
 
             await delay(1999)
-            
-            console.log(chalk.green('\n' + '═'.repeat(50)))
-            console.log(chalk.white.bold('           ⚡ WeedMd ONLINE ⚡'))
-            console.log(chalk.green('═'.repeat(50)))
-            console.log(chalk.cyan(`🌐 *Bot Name:* ${global.botname}`))
-            console.log(chalk.cyan(`📊 *Version:* ${settings.version || '1.0.0'}`))
-            console.log(chalk.cyan(`⏰ *Start Time:* ${new Date().toLocaleString()}`))
-            console.log(chalk.cyan(`📈 *Memory Usage:* ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`))
-            console.log(chalk.green('═'.repeat(50)))
-            console.log(chalk.white(`🚀 System Initialized Successfully!`))
-            console.log(chalk.white(`📥 All Commands Loaded`))
-            console.log(chalk.white(`🛡️ Security Systems Active`))
-            console.log(chalk.white(`⚡ Ready to receive commands`))
-            console.log(chalk.green('═'.repeat(50) + '\n'))
+            console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || 'WEED MD'} ]`)}\n\n`))
+            console.log(chalk.cyan(`< ================================================== >`))
+            console.log(chalk.magenta(`\n${global.themeemoji || '•'} YT CHANNEL: Weed Tech`))
+            console.log(chalk.magenta(`${global.themeemoji || '•'} GITHUB: weedtech333 `))
+            console.log(chalk.magenta(`${global.themeemoji || '•'} WA NUMBER: ${owner}`))
+            console.log(chalk.magenta(`${global.themeemoji || '•'} CREDIT: W𝙴𝙴𝙳 Dev`))
+            console.log(chalk.green(`${global.themeemoji || '•'} 🤖 Bot Connected Successfully! ✅`))
         }
-        
         if (connection === 'close') {
-            const shouldReconnect = (lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut
             const statusCode = lastDisconnect?.error?.output?.statusCode
-            
-            console.log(chalk.red(`⚠️ Connection closed: ${lastDisconnect?.error?.message || 'Unknown error'}`))
-            console.log(chalk.yellow(`🔄 Reconnecting: ${shouldReconnect ? 'YES' : 'NO'}`))
-            
             if (statusCode === DisconnectReason.loggedOut || statusCode === 401) {
                 try {
                     rmSync('./session', { recursive: true, force: true })
-                    console.log(chalk.yellow('🗑️ Session folder deleted. Please re-authenticate.'))
-                } catch (error) {
-                    console.error('Error deleting session:', error)
-                }
-                console.log(chalk.red('🔒 Session logged out. Please scan QR code again.'))
-            }
-            
-            if (shouldReconnect) {
-                console.log(chalk.yellow('🔄 Reconnecting in 5 seconds...'))
-                await delay(5000)
-                startZanitsuBot()
+                } catch { }
+                console.log(chalk.red('Session logged out. Please re-authenticate.'))
+                startXeonBotInc()
+            } else {
+                startXeonBotInc()
             }
         }
     })
 
-    // Track recently-notified callers to avoid spamming messages
-    const antiCallNotified = new Set();
+    XeonBotInc.ev.on('creds.update', saveCreds)
 
-    // Anticall handler: block callers when enabled
-    WeedmdBot.ev.on('call', async (calls) => {
-        try {
-            const { readState: readAnticallState } = require('./commands/anticall');
-            const state = readAnticallState();
-            if (!state.enabled) return;
-            for (const call of calls) {
-                const callerJid = call.from || call.peerJid || call.chatId;
-                if (!callerJid) continue;
-                try {
-                    // First: attempt to reject the call if supported
-                    try {
-                        if (typeof WeedmdBot.rejectCall === 'function' && call.id) {
-                            await WeedmdBot.rejectCall(call.id, callerJid);
-                        } else if (typeof WeedmdBot.sendCallOfferAck === 'function' && call.id) {
-                            await WeedmdBot.sendCallOfferAck(call.id, callerJid, 'reject');
-                        }
-                    } catch {}
-
-                    // Notify the caller only once within a short window
-                    if (!antiCallNotified.has(callerJid)) {
-                        antiCallNotified.add(callerJid);
-                        setTimeout(() => antiCallNotified.delete(callerJid), 60000);
-                        await WeedmdBot.sendMessage(callerJid, { 
-                            text: '📵 *WeedMd ANTICALL* 📵\n\nAnticall protection is enabled.\nYour call has been rejected and blocked.' 
-                        });
-                    }
-                } catch {}
-                // Then: block after a short delay to ensure rejection and message are processed
-                setTimeout(async () => {
-                    try { await WeedmdBot.updateBlockStatus(callerJid, 'block'); } catch {}
-                }, 800);
-            }
-        } catch (e) {
-            // ignore
-        }
+    XeonBotInc.ev.on('group-participants.update', async (update) => {
+        await handleGroupParticipantUpdate(XeonBotInc, update);
     });
 
-    WeedmdBot.ev.on('group-participants.update', async (update) => {
-        await handleGroupParticipantUpdate(WeedmdBot, update);
-    });
-
-    WeedmdBot.ev.on('messages.upsert', async (m) => {
+    XeonBotInc.ev.on('messages.upsert', async (m) => {
         if (m.messages[0].key && m.messages[0].key.remoteJid === 'status@broadcast') {
-            await handleStatus(WeedmdBot, m);
+            await handleStatus(XeonBotInc, m);
         }
     });
 
-    WeedmdBot.ev.on('status.update', async (status) => {
-        await handleStatus(WeedmdBot, status);
+    XeonBotInc.ev.on('status.update', async (status) => {
+        await handleStatus(XeonBotInc, status);
     });
 
-    WeedmdBot.ev.on('messages.reaction', async (status) => {
-        await handleStatus(WeedmdBot, status);
+    XeonBotInc.ev.on('messages.reaction', async (status) => {
+        await handleStatus(XeonBotInc, status);
     });
 
-    return WeedmdBot
-    } catch (error) {
-        console.error('❌ Error in startWeedMd:', error)
-        await delay(5000)
-        startZanitsuBot()
-    }
+    return XeonBotInc
 }
 
+
 // Start the bot with error handling
-startWeedMd().catch(error => {
-    console.error('🚫 Fatal error:', error)
+startXeonBotInc().catch(error => {
+    console.error('Fatal error:', error)
     process.exit(1)
 })
-
 process.on('uncaughtException', (err) => {
-    console.error('🚫 Uncaught Exception:', err)
+    console.error('Uncaught Exception:', err)
 })
 
 process.on('unhandledRejection', (err) => {
-    console.error('🚫 Unhandled Rejection:', err)
+    console.error('Unhandled Rejection:', err)
 })
 
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {
     fs.unwatchFile(file)
-    console.log(chalk.green(`🔄 Updated ${__filename}`))
+    console.log(chalk.redBright(`Update ${__filename}`))
     delete require.cache[file]
     require(file)
 })
