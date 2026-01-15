@@ -123,11 +123,11 @@ setInterval(() => {
     }
 }, 30_000) // check every 30 seconds
 
-let phoneNumber = "234xxx"
+let phoneNumber = "509xxxx"
 let owner = JSON.parse(fs.readFileSync('./data/owner.json'))
 
-global.botname = "Zanitsu bot"
-global.themeemoji = "⚡"
+global.botname = "𝗪𝗲𝗲𝗱-𝗠𝗗"
+global.themeemoji = "💫"
 const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code")
 const useMobile = process.argv.includes("--mobile")
 
@@ -142,13 +142,13 @@ const question = (text) => {
     }
 }
 
-async function startZanitsuBot() {
+async function startWeedMd() {
     try {
         let { version, isLatest } = await fetchLatestBaileysVersion()
         const { state, saveCreds } = await useMultiFileAuthState(`./session`)
         const msgRetryCounterCache = new NodeCache()
 
-        const ZanitsuBot = makeWASocket({
+        const WeedmdBot = makeWASocket({
             version,
             logger: pino({ level: 'silent' }),
             printQRInTerminal: !pairingCode,
@@ -172,12 +172,12 @@ async function startZanitsuBot() {
         })
 
         // Save credentials when they update
-        ZanitsuBot.ev.on('creds.update', saveCreds)
+        weedmdBot.ev.on('creds.update', saveCreds)
 
     store.bind(ZanitsuBot.ev)
 
     // Message handling
-    ZanitsuBot.ev.on('messages.upsert', async chatUpdate => {
+    weedmdBot.ev.on('messages.upsert', async chatUpdate => {
         try {
             const mek = chatUpdate.messages[0]
             if (!mek.message) return
@@ -189,7 +189,7 @@ async function startZanitsuBot() {
             
             mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
             if (mek.key && mek.key.remoteJid === 'status@broadcast') {
-                await handleStatus(ZanitsuBot, chatUpdate);
+                await handleStatus(Weedmd, chatUpdate);
                 return;
             }
             // In private mode, only block non-group messages (allow groups for moderation)
@@ -200,24 +200,24 @@ async function startZanitsuBot() {
             if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
 
             // Clear message retry cache to prevent memory bloat
-            if (ZanitsuBot?.msgRetryCounterCache) {
-                ZanitsuBot.msgRetryCounterCache.clear()
+            if (WeeedmdBot?.msgRetryCounterCache) {
+                WeedmdBot.msgRetryCounterCache.clear()
             }
 
             try {
-                await handleMessages(ZanitsuBot, chatUpdate, true)
+                await handleMessages(WeedmdBot, chatUpdate, true)
             } catch (err) {
-                console.error("[ZanitsuBot] Message handler error:", err)
+                console.error("[WeeedmdBot] Message handler error:", err)
                 // Only try to send error message if we have a valid chatId
                 if (mek.key && mek.key.remoteJid) {
-                    await ZanitsuBot.sendMessage(mek.key.remoteJid, {
-                        text: '🚫 *ZanitsuBot SYSTEM ERROR* 🚫\n\nAn error occurred while processing your request.\nPlease try again.',
+                    await WeedmdBot.sendMessage(mek.key.remoteJid, {
+                        text: '🚫 *Weed Md SYSTEM ERROR* 🚫\n\nAn error occurred while processing your request.\nPlease try again.',
                         contextInfo: {
                             forwardingScore: 1,
                             isForwarded: true,
                             forwardedNewsletterMessageInfo: {
-                                newsletterJid: '120363406735242612@newsletter',
-                                newsletterName: 'ZanitsuBot',
+                                newsletterJid: '120363407561123100@newsletter',
+                                newsletterName: '𝗪𝗲𝗲𝗱-𝗠𝗗',
                                 serverMessageId: -1
                             }
                         }
@@ -225,12 +225,12 @@ async function startZanitsuBot() {
                 }
             }
         } catch (err) {
-            console.error("[ZanitsuBot] Error in messages.upsert:", err)
+            console.error("[WeedmdBot] Error in messages.upsert:", err)
         }
     })
 
     // Add these event handlers for better functionality
-    ZanitsuBot.decodeJid = (jid) => {
+    WeedmdBot.decodeJid = (jid) => {
         if (!jid) return jid
         if (/:\d+@/gi.test(jid)) {
             let decode = jidDecode(jid) || {}
@@ -238,44 +238,44 @@ async function startZanitsuBot() {
         } else return jid
     }
 
-    ZanitsuBot.ev.on('contacts.update', update => {
+    WeedmdBot.ev.on('contacts.update', update => {
         for (let contact of update) {
-            let id = ZanitsuBot.decodeJid(contact.id)
+            let id = WeedmdBot.decodeJid(contact.id)
             if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
         }
     })
 
-    ZanitsuBot.getName = (jid, withoutContact = false) => {
-        id = ZanitsuBot.decodeJid(jid)
-        withoutContact = ZanitsuBot.withoutContact || withoutContact
+    WeedmdBot.getName = (jid, withoutContact = false) => {
+        id = WeedmdBot.decodeJid(jid)
+        withoutContact = WeedmdBot.withoutContact || withoutContact
         let v
         if (id.endsWith("@g.us")) return new Promise(async (resolve) => {
             v = store.contacts[id] || {}
-            if (!(v.name || v.subject)) v = ZanitsuBot.groupMetadata(id) || {}
+            if (!(v.name || v.subject)) v = WeedmdBot.groupMetadata(id) || {}
             resolve(v.name || v.subject || PhoneNumber('+' + id.replace('@s.whatsapp.net', '')).getNumber('international'))
         })
         else v = id === '0@s.whatsapp.net' ? {
             id,
             name: 'WhatsApp'
-        } : id === ZanitsuBot.decodeJid(ZanitsuBot.user.id) ?
-            ZanitsuBot.user :
+        } : id === WeedmdBot.decodeJid(WeedmdBot.user.id) ?
+            WeedmdBot.user :
             (store.contacts[id] || {})
         return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
     }
 
-    ZanitsuBot.public = true
+    Weed Md.public = true
 
-    ZanitsuBot.serializeM = (m) => smsg(ZanitsuBot, m, store)
+    WeedmdBot.serializeM = (m) => smsg(WeedmdBot, m, store)
 
     // Handle pairing code
-    if (pairingCode && !ZanitsuBot.authState.creds.registered) {
+    if (pairingCode && !WeedmdBot.authState.creds.registered) {
         if (useMobile) throw new Error('Cannot use pairing code with mobile api')
 
         let phoneNumber
         if (!!global.phoneNumber) {
             phoneNumber = global.phoneNumber
         } else {
-            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`\n⚡ *ZanitsuBot SETUP* ⚡\n\n📱 Enter your WhatsApp number:\nFormat: 234xxx (without + or spaces)\n\n👉 Input: `)))
+            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`\n⚡ *Weed Md SETUP* ⚡\n\n📱 Enter your WhatsApp number:\nFormat: 509xxx (without + or spaces)\n\n👉 Input: `)))
         }
 
         // Clean the phone number - remove any non-digit characters
@@ -284,17 +284,17 @@ async function startZanitsuBot() {
         // Validate the phone number using awesome-phonenumber
         const pn = require('awesome-phonenumber');
         if (!pn('+' + phoneNumber).isValid()) {
-            console.log(chalk.red('❌ Invalid phone number. Please enter your full international number (e.g., 243xxx for ur country) without + or spaces.'));
+            console.log(chalk.red('❌ Invalid phone number. Please enter your full international number (e.g., 509xxx for ur country) without + or spaces.'));
             process.exit(1);
         }
 
         setTimeout(async () => {
             try {
-                let code = await ZanitsuBot.requestPairingCode(phoneNumber)
+                let code = await WeedmdBot.requestPairingCode(phoneNumber)
                 code = code?.match(/.{1,4}/g)?.join("-") || code
                 
                 console.log(chalk.green('\n' + '═'.repeat(50)))
-                console.log(chalk.white.bold('         ⚡ ZanitsuBot AUTHENTICATION ⚡'))
+                console.log(chalk.white.bold('         ⚡ Weed Md AUTHENTICATION ⚡'))
                 console.log(chalk.green('═'.repeat(50)))
                 console.log(chalk.yellow(`\n📱 Pairing Code:`))
                 console.log(chalk.white.bgBlue(`    ${code}    `))
@@ -313,7 +313,7 @@ async function startZanitsuBot() {
     }
 
     // Connection handling
-    ZanitsuBot.ev.on('connection.update', async (s) => {
+    WeedmdBot.ev.on('connection.update', async (s) => {
         const { connection, lastDisconnect, qr } = s
         
         if (qr) {
@@ -326,25 +326,25 @@ async function startZanitsuBot() {
         
         if (connection == "open") {
             console.log(chalk.magenta(` `))
-            console.log(chalk.yellow(`✅ Connected as: ` + JSON.stringify(ZanitsuBot.user.id, null, 2)))
+            console.log(chalk.yellow(`✅ Connected as: ` + JSON.stringify(WeedmdBot.user.id, null, 2)))
 
             try {
-                const botNumber = ZanitsuBot.user.id.split(':')[0] + '@s.whatsapp.net';
-                await ZanitsuBot.sendMessage(botNumber, {
-                    text: `⚡ *ZanitsuBot SYSTEM ONLINE* ⚡\n\n` +
+                const botNumber = WeedmdBot.user.id.split(':')[0] + '@s.whatsapp.net';
+                await WeedmdBot.sendMessage(botNumber, {
+                    text: `⚡ *Weed Md SYSTEM ONLINE* ⚡\n\n` +
                           `✅ *Status:* Connected Successfully\n` +
                           `⏰ *Time:* ${new Date().toLocaleString()}\n` +
                           `📊 *Version:* ${settings.version || '1.0.0'}\n\n` +
                           `🚀 *System Ready*\n` +
                           `📥 *Commands:* Active\n` +
                           `🛡️ *Protection:* Enabled\n\n` +
-                          `⭐ *ZanitsuBot is now online!*`,
+                          `⭐ *Weed Md is now online!*`,
                     contextInfo: {
                         forwardingScore: 1,
                         isForwarded: true,
                         forwardedNewsletterMessageInfo: {
-                            newsletterJid: '120363406735242612@newsletter',
-                            newsletterName: 'ZanitsuBot',
+                            newsletterJid: '120363407561123100@newsletter',
+                            newsletterName: 'Weed MD',
                             serverMessageId: -1
                         }
                     }
@@ -356,7 +356,7 @@ async function startZanitsuBot() {
             await delay(1999)
             
             console.log(chalk.green('\n' + '═'.repeat(50)))
-            console.log(chalk.white.bold('           ⚡ ZanitsuBot ONLINE ⚡'))
+            console.log(chalk.white.bold('           ⚡ Weed Md ONLINE ⚡'))
             console.log(chalk.green('═'.repeat(50)))
             console.log(chalk.cyan(`🌐 *Bot Name:* ${global.botname}`))
             console.log(chalk.cyan(`📊 *Version:* ${settings.version || '1.0.0'}`))
@@ -399,7 +399,7 @@ async function startZanitsuBot() {
     const antiCallNotified = new Set();
 
     // Anticall handler: block callers when enabled
-    ZanitsuBot.ev.on('call', async (calls) => {
+    WeedmdBot.ev.on('call', async (calls) => {
         try {
             const { readState: readAnticallState } = require('./commands/anticall');
             const state = readAnticallState();
@@ -410,10 +410,10 @@ async function startZanitsuBot() {
                 try {
                     // First: attempt to reject the call if supported
                     try {
-                        if (typeof ZanitsuBot.rejectCall === 'function' && call.id) {
-                            await ZanitsuBot.rejectCall(call.id, callerJid);
-                        } else if (typeof ZanitsuBot.sendCallOfferAck === 'function' && call.id) {
-                            await ZanitsuBot.sendCallOfferAck(call.id, callerJid, 'reject');
+                        if (typeof WeedmdBot.rejectCall === 'function' && call.id) {
+                            await WeedmdBot.rejectCall(call.id, callerJid);
+                        } else if (typeof WeedmdBot.sendCallOfferAck === 'function' && call.id) {
+                            await WeedmdBot.sendCallOfferAck(call.id, callerJid, 'reject');
                         }
                     } catch {}
 
@@ -421,14 +421,14 @@ async function startZanitsuBot() {
                     if (!antiCallNotified.has(callerJid)) {
                         antiCallNotified.add(callerJid);
                         setTimeout(() => antiCallNotified.delete(callerJid), 60000);
-                        await ZanitsuBot.sendMessage(callerJid, { 
-                            text: '📵 *ZanitsuBot ANTICALL* 📵\n\nAnticall protection is enabled.\nYour call has been rejected and blocked.' 
+                        await WeedmdBot.sendMessage(callerJid, { 
+                            text: '📵 *Weed Md ANTICALL* 📵\n\nAnticall protection is enabled.\nYour call has been rejected and blocked.' 
                         });
                     }
                 } catch {}
                 // Then: block after a short delay to ensure rejection and message are processed
                 setTimeout(async () => {
-                    try { await ZanitsuBot.updateBlockStatus(callerJid, 'block'); } catch {}
+                    try { await WeedmdBot.updateBlockStatus(callerJid, 'block'); } catch {}
                 }, 800);
             }
         } catch (e) {
@@ -436,34 +436,34 @@ async function startZanitsuBot() {
         }
     });
 
-    ZanitsuBot.ev.on('group-participants.update', async (update) => {
-        await handleGroupParticipantUpdate(ZanitsuBot, update);
+    WeedmdBot.ev.on('group-participants.update', async (update) => {
+        await handleGroupParticipantUpdate(WeedmdBot, update);
     });
 
-    ZanitsuBot.ev.on('messages.upsert', async (m) => {
+    WeedmdBot.ev.on('messages.upsert', async (m) => {
         if (m.messages[0].key && m.messages[0].key.remoteJid === 'status@broadcast') {
-            await handleStatus(ZanitsuBot, m);
+            await handleStatus(WeedmdBot, m);
         }
     });
 
-    ZanitsuBot.ev.on('status.update', async (status) => {
-        await handleStatus(ZanitsuBot, status);
+    WeedmdBot.ev.on('status.update', async (status) => {
+        await handleStatus(WeedmdBot, status);
     });
 
-    ZanitsuBot.ev.on('messages.reaction', async (status) => {
-        await handleStatus(ZanitsuBot, status);
+    WeedmdBot.ev.on('messages.reaction', async (status) => {
+        await handleStatus(WeedmdBot, status);
     });
 
-    return ZanitsuBot
+    return WeedmdBot
     } catch (error) {
-        console.error('❌ Error in startZanitsuBot:', error)
+        console.error('❌ Error in startWeed Md:', error)
         await delay(5000)
         startZanitsuBot()
     }
 }
 
 // Start the bot with error handling
-startZanitsuBot().catch(error => {
+startWeed Md().catch(error => {
     console.error('🚫 Fatal error:', error)
     process.exit(1)
 })
