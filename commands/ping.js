@@ -29,19 +29,14 @@ async function pingCommand(sock, chatId, message) {
         if (latency > 1000) speedRating = "⚠️ Slow";
 
         const response = `
-╔════════════════╗
-    ⚡ *ZENITSU-BOT PING* ⚡
-╚════════════════╝
+╭───〔 🏓 PONG 〕───╮
+│ ✅ Status   : *WEED-MD* is online and ready!
+│ ⏱️ Latency : *${latency} ms*
+│ ⚡ Uptime  : *${hours}h ${minutes}m ${seconds}s*
+│ 🚀 Performance : *Ultra fast* 💫
+╰───────────────────╯
 
-🏓 *Response:* ${latency.toFixed(0)}ms
-⚡ *Speed:* ${speedRating}
-💾 *RAM:* ${ramPercent}%
-🖥️ *CPU:* ${cpus.length} cores
-
-✅ *System:* Online
-📡 *Network:* Active
-
-> ρσωєяє∂ ву chrisGaaju`;
+> ᴘᴏᴡᴇʀᴇᴅ ʙʏ Ｄ𝚎𝚟 𝚆𝚎𝚎𝚍`;
 
         // Delete status message
         await sock.sendMessage(chatId, {
