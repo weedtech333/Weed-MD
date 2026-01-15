@@ -196,7 +196,7 @@ const groupControlCommand = require('./commands/groupcontrol');
 global.packname = settings.packname;
 global.author = settings.author;
 global.channelLink = "https://whatsapp.com/channel/0029VbBaJvI7IUYbtCeaPh0I";
-global.ytch = "Mr Unique Hacker";
+global.ytch = "WeedTech";
 
 // Add this near the top of main.js with other global configurations
 const channelInfo = {
@@ -204,8 +204,8 @@ const channelInfo = {
         forwardingScore: 1,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363406735242612@newsletter',
-            newsletterName: '𝙕𝙖𝙣𝙞𝙩𝙨𝙪 𝙗𝙤𝙩',
+            newsletterJid: '120363407561123100@newsletter',
+            newsletterName: '𝗪𝗲𝗲𝗱-𝗠𝗗',
             serverMessageId: -1
         }
     }
@@ -246,7 +246,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
             
             if (buttonId === 'channel') {
                 await sock.sendMessage(chatId, { 
-                    text: '📢 *Join our Channel:*\nhttps://whatsapp.com/channel/0029Vb6zuIiLikg7V58lXp1A' 
+                    text: '📢 *Join our Channel:*\https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V' 
                 }, { quoted: message });
                 const isChannel = chatId.includes('@newsletter');
                 logSentMessage(chatId, 'Channel link sent', isChannel);
@@ -259,7 +259,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 return;
             } else if (buttonId === 'support') {
                 await sock.sendMessage(chatId, { 
-                    text: `🔗 *Support*\n\nhttps://chat.whatsapp.com/FASqxzw60hB989DVmMOpRO?mode=wwt` 
+                    text: `🔗 *Support*\n\nhttps://chat.whatsapp.com/KfYnvgj0JTqErxKc0RTNNu` 
                 }, { quoted: message });
                 const isChannel = chatId.includes('@newsletter');
                 logSentMessage(chatId, 'Support link sent', isChannel);
