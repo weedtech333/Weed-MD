@@ -1,377 +1,264 @@
 const settings = require('../settings');
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
-const { performance } = require('perf_hooks');
 
-function runtime(seconds) {
-    seconds = Number(seconds);
-    const d = Math.floor(seconds / (3600 * 24));
-    const h = Math.floor((seconds % (3600 * 24)) / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = Math.floor(seconds % 60);
-    return `${d}d ${h}h ${m}m ${s}s`;
-}
+async function helpCommand(sock, chatId, message, pushname, config) {
+    // Hakikisha config ipo, iwapo haipo tumia default
+    const prefix = config && config.PREFIX ? config.PREFIX : '.';
+    const mode = settings.mode || '𝙿𝚄𝙱𝙻𝙸𝙲';
+    const version = settings.version || '𝟹.𝟶.𝟶';
+    
+    const helpMessage = `
+*╭━━━〔 🤖 ᴡᴇᴇᴅ 𝙼𝙳 🤖 〕━━━┈⊷*
+*┃❖╭──────────────────*
+*┃💠│ 𝚄𝚂𝙴𝚁 :❯ ${pushname || 'User'}*
+*┃💠│ 𝙼𝙾𝙳𝙴 :❯ ${mode}*
+*┃💠│ 𝙿𝚁𝙴𝙵𝙸𝚇 :❯ ${prefix}*
+*┃💠│ 𝚅𝙴𝚁𝚂𝙸𝙾𝙽 :❯ ${version}*
+*┃❖╰──────────────────*
+*╰━━━━━━━━━━━━━━━┈⊷*
 
-async function helpCommand(sock, chatId, message) {
+*𝙷𝙸 ${pushname || 'User'} 🥰*
+
+*╭━━〔 ⛄️ 𝙶𝙴𝙽𝙴𝚁𝙰𝙻 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂 〕━━┈⊷*
+*┃❖│ • .𝙷𝙴𝙻𝙿 / .𝙼𝙴𝙽𝚄*
+*┃❖│ • .𝙿𝙸𝙽𝙶*
+*┃❖│ • .𝙰𝙻𝙸𝚅𝙴*
+*┃❖│ • .𝚃𝚃𝚂 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙾𝚆𝙽𝙴𝚁*
+*┃❖│ • .𝙹𝙾𝙺𝙴*
+*┃❖│ • .𝚀𝚄𝙾𝚃𝙴*
+*┃❖│ • .𝙵𝙰𝙲𝚃*
+*┃❖│ • .𝚆𝙴𝙰𝚃𝙷𝙴𝚁 <𝙲𝙸𝚃𝚈>*
+*┃❖│ • .𝙽𝙴𝚆𝚂*
+*┃❖│ • .𝙰𝚃𝚃𝙿 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙻𝚈𝚁𝙸𝙲𝚂 <𝚂𝙾𝙽𝙶_𝚃𝙸𝚃𝙻𝙴>*
+*┃❖│ • .𝟾𝙱𝙰𝙻𝙻 <𝚀𝚄𝙴𝚂𝚃𝙸𝙾𝙽>*
+*┃❖│ • .𝙶𝚁𝙾𝚄𝙿𝙸𝙽𝙵𝙾*
+*┃❖│ • .𝚂𝚃𝙰𝙵𝙵 / .𝙰𝙳𝙼𝙸𝙽𝚂*
+*┃❖│ • .𝚅𝚅*
+*┃❖│ • .𝚃𝚁𝚃 <𝚃𝙴𝚇𝚃> <𝙻𝙰𝙽𝙶>*
+*┃❖│ • .𝚂𝚂 <𝙻𝙸𝙽𝙺>*
+*┃❖│ • .𝙹𝙸𝙳*
+*┃❖│ • .𝚄𝚁𝙻*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 🔘 𝙰𝙳𝙼𝙸𝙽 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂 〕━━┈⊷*
+*┃❖│ • .𝙱𝙰𝙽 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝙿𝚁𝙾𝙼𝙾𝚃𝙴 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝙳𝙴𝙼𝙾𝚃𝙴 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝙼𝚄𝚃𝙴 <𝙼𝙸𝙽𝚄𝚃𝙴𝚂>*
+*┃❖│ • .𝚄𝙽𝙼𝚄𝚃𝙴*
+*┃❖│ • .𝙳𝙴𝙻𝙴𝚃𝙴 / .𝙳𝙴𝙻*
+*┃❖│ • .𝙺𝙸𝙲𝙺 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝚆𝙰𝚁𝙽𝙸𝙽𝙶𝚂 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝚆𝙰𝚁𝙽 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝙰𝙽𝚃𝙸𝙻𝙸𝙽𝙺*
+*┃❖│ • .𝙰𝙽𝚃𝙸𝙱𝙰𝙳𝚆𝙾𝚁𝙳*
+*┃❖│ • .𝙲𝙻𝙴𝙰𝚁*
+*┃❖│ • .𝚃𝙰𝙶 <𝙼𝙴𝚂𝚂𝙰𝙶𝙴>*
+*┃❖│ • .𝚃𝙰𝙶𝙰𝙻𝙻*
+*┃❖│ • .𝚃𝙰𝙶𝙽𝙾𝚃𝙰𝙳𝙼𝙸𝙽*
+*┃❖│ • .𝙷𝙸𝙳𝙴𝚃𝙰𝙶 <𝙼𝙴𝚂𝚂𝙰𝙶𝙴>*
+*┃❖│ • .𝙲𝙷𝙰𝚃𝙱𝙾𝚃*
+*┃❖│ • .𝚁𝙴𝚂𝙴𝚃𝙻𝙸𝙽𝙺*
+*┃❖│ • .𝙰𝙽𝚃𝙸𝚃𝙰𝙶 <𝙾𝙽/𝙾𝙵𝙵>*
+*┃❖│ • .𝚆𝙴𝙻𝙲𝙾𝙼𝙴 <𝙾𝙽/𝙾𝙵𝙵>*
+*┃❖│ • .𝙶𝙾𝙾𝙳𝙱𝚈𝙴 <𝙾𝙽/𝙾𝙵𝙵>*
+*┃❖│ • .𝚂𝙴𝚃𝙶𝙳𝙴𝚂𝙲 <𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝚃𝙸𝙾𝙽>*
+*┃❖│ • .𝚂𝙴𝚃𝙶𝙽𝙰𝙼𝙴 <𝙽𝙴𝚆 𝙽𝙰𝙼𝙴>*
+*┃❖│ • .𝚂𝙴𝚃𝙶𝙿𝙿 (𝚁𝙴𝙿𝙻𝚈 𝚃𝙾 𝙸𝙼𝙰𝙶𝙴)*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 🦄 𝙾𝚆𝙽𝙴𝚁 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂  〕━━┈⊷*
+*┃❖│ • .𝙼𝙾𝙳𝙴 <𝙿𝚄𝙱𝙻𝙸𝙲/𝙿𝚁𝙸𝚅𝙰𝚃𝙴>*
+*┃❖│ • .𝙲𝙻𝙴𝙰𝚁𝚂𝙴𝚂𝚂𝙸𝙾𝙽*
+*┃❖│ • .𝙰𝙽𝚃𝙸𝙳𝙴𝙻𝙴𝚃𝙴*
+*┃❖│ • .𝙲𝙻𝙴𝙰𝚁𝚃𝙼𝙿*
+*┃❖│ • .𝚄𝙿𝙳𝙰𝚃𝙴*
+*┃❖│ • .𝚂𝙴𝚃𝚃𝙸𝙽𝙶𝚂*
+*┃❖│ • .𝚂𝙴𝚃𝙿𝙿 <𝚁𝙴𝙿𝙻𝚈 𝚃𝙾 𝙸𝙼𝙰𝙶𝙴>*
+*┃❖│ • .𝙰𝚄𝚃𝙾𝚁𝙴𝙰𝙲𝚃 <𝙾𝙽/𝙾𝙵𝙵>*
+*┃❖│ • .𝙰𝚄𝚃𝙾𝚂𝚃𝙰𝚃𝚄𝚂 <𝙾𝙽/𝙾𝙵𝙵>*
+*┃❖│ • .𝙰𝚄𝚃𝙾𝚂𝚃𝙰𝚃𝚄𝚂 𝚁𝙴𝙰𝙲𝚃 <𝙾𝙽/𝙾𝙵𝙵>*
+*┃❖│ • .𝙰𝚄𝚃𝙾𝚃𝚈𝙿𝙸𝙽𝙶 <𝙾𝙽/𝙾𝙵𝙵>*
+*┃❖│ • .𝙰𝚄𝚃𝙾𝚁𝙴𝙰𝙳 <𝙾𝙽/𝙾𝙵𝙵>*
+*┃❖│ • .𝙰𝙽𝚃𝙸𝙲𝙰𝙻𝙻 <𝙾𝙽/𝙾𝙵𝙵>*
+*┃❖│ • .𝙿𝙼𝙱𝙻𝙾𝙲𝙺𝙴𝚁 <𝙾𝙽/𝙾𝙵𝙵/𝚂𝚃𝙰𝚃𝚄𝚂>*
+*┃❖│ • .𝙿𝙼𝙱𝙻𝙾𝙲𝙺𝙴𝚁 𝚂𝙴𝚃𝙼𝚂𝙶 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝚂𝙴𝚃𝙼𝙴𝙽𝚃𝙸𝙾𝙽 <𝚁𝙴𝙿𝙻𝚈 𝚃𝙾 𝙼𝚂𝙶>*
+*┃❖│ • .𝙼𝙴𝙽𝚃𝙸𝙾𝙽 <𝙾𝙽/𝙾𝙵𝙵>*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 😊 𝙸𝙼𝙰𝙶𝙴/𝚂𝚃𝙸𝙲𝙺𝙴𝚁 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂 〕━━┈⊷*
+*┃❖│ • .𝙱𝙻𝚄𝚁 <𝙸𝙼𝙰𝙶𝙴>*
+*┃❖│ • .𝚂𝙸𝙼𝙰𝙶𝙴 <𝚁𝙴𝙿𝙻𝚈 𝚃𝙾 𝚂𝚃𝙸𝙲𝙺𝙴𝚁>*
+*┃❖│ • .𝚂𝚃𝙸𝙲𝙺𝙴𝚁 <𝚁𝙴𝙿𝙻𝚈 𝚃𝙾 𝙸𝙼𝙰𝙶𝙴>*
+*┃❖│ • .𝚁𝙴𝙼𝙾𝚅𝙴𝙱𝙶*
+*┃❖│ • .𝚁𝙴𝙼𝙸𝙽𝙸*
+*┃❖│ • .𝙲𝚁𝙾𝙿 <𝚁𝙴𝙿𝙻𝚈 𝚃𝙾 𝙸𝙼𝙰𝙶𝙴>*
+*┃❖│ • .𝚃𝙶𝚂𝚃𝙸𝙲𝙺𝙴𝚁 <𝙻𝙸𝙽𝙺>*
+*┃❖│ • .𝙼𝙴𝙼𝙴*
+*┃❖│ • .𝚃𝙰𝙺𝙴 <𝙿𝙰𝙲𝙺𝙽𝙰𝙼𝙴>*
+*┃❖│ • .𝙴𝙼𝙾𝙹𝙸𝙼𝙸𝚇 <𝙴𝙼𝙹𝟷>+<𝙴𝙼𝙹𝟸>*
+*┃❖│ • .𝙸𝙶𝚂 <𝙸𝙽𝚂𝚃𝙰 𝙻𝙸𝙽𝙺>*
+*┃❖│ • .𝙸𝙶𝚂𝙲 <𝙸𝙽𝚂𝚃𝙰 𝙻𝙸𝙽𝙺>*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 🎀 𝙿𝙸𝙴𝚂 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂 〕━━┈⊷*
+*┃❖│ • .𝙿𝙸𝙴𝚂 <𝙲𝙾𝚄𝙽𝚃𝚁𝚈>*
+*┃❖│ • .𝙲𝙷𝙸𝙽𝙰*
+*┃❖│ • .𝙸𝙽𝙳𝙾𝙽𝙴𝚂𝙸𝙰*
+*┃❖│ • .𝙹𝙰𝙿𝙰𝙽*
+*┃❖│ • .𝙺𝙾𝚁𝙴𝙰*
+*┃❖│ • .𝙷𝙸𝙹𝙰𝙱*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 🔫 𝙶𝙰𝙼𝙴 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂 〕━━┈⊷*
+*┃❖│ • .𝚃𝙸𝙲𝚃𝙰𝙲𝚃𝙾𝙴 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝙷𝙰𝙽𝙶𝙼𝙰𝙽*
+*┃❖│ • .𝙶𝚄𝙴𝚂𝚂 <𝙻𝙴𝚃𝚃𝙴𝚁>*
+*┃❖│ • .𝚃𝚁𝙸𝚅𝙸𝙰*
+*┃❖│ • .𝙰𝙽𝚂𝚆𝙴𝚁 <𝙰𝙽𝚂𝚆𝙴𝚁>*
+*┃❖│ • .𝚃𝚁𝚄𝚃𝙷*
+*┃❖│ • .𝙳𝙰𝚁𝙴*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 🔍 𝙰𝙸 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂 〕━━┈⊷*
+*┃❖│ • .𝙶𝙿𝚃 <𝚀𝚄𝙴𝚂𝚃𝙸𝙾𝙽>*
+*┃❖│ • .𝙶𝙴𝙼𝙸𝙽𝙸 <𝚀𝚄𝙴𝚂𝚃𝙸𝙾𝙽>*
+*┃❖│ • .𝙸𝙼𝙰𝙶𝙸𝙽𝙴 <𝙿𝚁𝙾𝙼𝙿𝚃>*
+*┃❖│ • .𝙵𝙻𝚄𝚇 <𝙿𝚁𝙾𝙼𝙿𝚃>*
+*┃❖│ • .𝚂𝙾𝚁𝙰 <𝙿𝚁𝙾𝙼𝙿𝚃>*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 🗝 𝙵𝚄𝙽 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂 〕━━┈⊷*
+*┃❖│ • .𝙲𝙾𝙼𝙿𝙻𝙸𝙼𝙴𝙽𝚃 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝙸𝙽𝚂𝚄𝙻𝚃 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝙵𝙻𝙸𝚁𝚃*
+*┃❖│ • .𝚂𝙷𝙰𝚈𝙰𝚁𝙸*
+*┃❖│ • .𝙶𝙾𝙾𝙳𝙽𝙸𝙶𝙷𝚃*
+*┃❖│ • .𝚁𝙾𝚂𝙴𝙳𝙰𝚈*
+*┃❖│ • .𝙲𝙷𝙰𝚁𝙰𝙲𝚃𝙴𝚁 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝚆𝙰𝚂𝚃𝙴𝙳 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝚂𝙷𝙸𝙿 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝚂𝙸𝙼𝙿 @𝚄𝚂𝙴𝚁*
+*┃❖│ • .𝚂𝚃𝚄𝙿𝙸𝙳 @𝚄𝚂𝙴𝚁 [𝚃𝙴𝚇𝚃]*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 🤩 𝚃𝙴𝚇𝚃𝙼𝙰𝙺𝙴𝚁 〕━━┈⊷*
+*┃❖│ • .𝙼𝙴𝚃𝙰𝙻𝙻𝙸𝙲 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙸𝙲𝙴 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝚂𝙽𝙾𝚆 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙸𝙼𝙿𝚁𝙴𝚂𝚂𝙸𝚅𝙴 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙼𝙰𝚃𝚁𝙸𝚇 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙻𝙸𝙶𝙷𝚃 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙽𝙴𝙾𝙽 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙳𝙴𝚅𝙸𝙻 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙿𝚄𝚁𝙿𝙻𝙴 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝚃𝙷𝚄𝙽𝙳𝙴𝚁 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙻𝙴𝙰𝚅𝙴𝚂 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝟷𝟿𝟷𝟽 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙰𝚁𝙴𝙽𝙰 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙷𝙰𝙲𝙺𝙴𝚁 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝚂𝙰𝙽𝙳 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙱𝙻𝙰𝙲𝙺𝙿𝙸𝙽𝙺 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙶𝙻𝙸𝚃𝙲𝙷 <𝚃𝙴𝚇𝚃>*
+*┃❖│ • .𝙵𝙸𝚁𝙴 <𝚃𝙴𝚇𝚃>*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 🔎 𝙳𝙾𝚆𝙽𝙻𝙾𝙰𝙳𝙴𝚁 〕━━┈⊷*
+*┃❖│ • .𝙿𝙻𝙰𝚈 <𝚂𝙾𝙽𝙶_𝙽𝙰𝙼𝙴>*
+*┃❖│ • .𝚂𝙾𝙽𝙶 <𝚂𝙾𝙽𝙶_𝙽𝙰𝙼𝙴>*
+*┃❖│ • .𝚂𝙿𝙾𝚃𝙸𝙵𝚈 <𝚀𝚄𝙴𝚁𝚈>*
+*┃❖│ • .𝙸𝙽𝚂𝚃𝙰𝙶𝚁𝙰𝙼 <𝙻𝙸𝙽𝙺>*
+*┃❖│ • .𝙵𝙰𝙲𝙴𝙱𝙾𝙾𝙺 <𝙻𝙸𝙽𝙺>*
+*┃❖│ • .𝚃𝙸𝙺𝚃𝙾𝙺 <𝙻𝙸𝙽𝙺>*
+*┃❖│ • .𝚅𝙸𝙳𝙴𝙾 <𝚂𝙾𝙽𝙶 𝙽𝙰𝙼𝙴>*
+*┃❖│ • .𝚈𝚃𝙼𝙿𝟺 <𝙻𝙸𝙽𝙺>*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 🎀 𝙼𝙸𝚂𝙲 〕━━┈⊷*
+*┃❖│ • .𝙷𝙴𝙰𝚁𝚃*
+*┃❖│ • .𝙷𝙾𝚁𝙽𝚈*
+*┃❖│ • .𝙲𝙸𝚁𝙲𝙻𝙴*
+*┃❖│ • .𝙻𝙶𝙱𝚃*
+*┃❖│ • .𝙻𝙾𝙻𝙸𝙲𝙴*
+*┃❖│ • .𝙸𝚃𝚂-𝚂𝙾-𝚂𝚃𝚄𝙿𝙸𝙳*
+*┃❖│ • .𝙽𝙰𝙼𝙴𝙲𝙰𝚁𝙳*
+*┃❖│ • .𝙾𝙾𝙶𝚆𝙰𝚈*
+*┃❖│ • .𝚃𝚆𝙴𝙴𝚃*
+*┃❖│ • .𝚈𝚃𝙲𝙾𝙼𝙼𝙴𝙽𝚃*
+*┃❖│ • .𝙲𝙾𝙼𝚁𝙰𝙳𝙴*
+*┃❖│ • .𝙶𝙰𝚈*
+*┃❖│ • .𝙶𝙻𝙰𝚂𝚂*
+*┃❖│ • .𝙹𝙰𝙸𝙻*
+*┃❖│ • .𝙿𝙰𝚂𝚂𝙴𝙳*
+*┃❖│ • .𝚃𝚁𝙸𝙶𝙶𝙴𝚁𝙴𝙳*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔 🎀 𝙰𝙽𝙸𝙼𝙴 〕━━┈⊷*
+*┃❖│ • .𝙽𝙴𝙺𝙾*
+*┃❖│ • .𝚆𝙰𝙸𝙵𝚄*
+*┃❖│ • .𝙻𝙾𝙻𝙸*
+*┃❖│ • .𝙽𝙾𝙼*
+*┃❖│ • .𝙿𝙾𝙺𝙴*
+*┃❖│ • .𝙲𝚁𝚈*
+*┃❖│ • .𝙺𝙸𝚂𝚂*
+*┃❖│ • .𝙿𝙰𝚃*
+*┃❖│ • .𝙷𝚄𝙶*
+*┃❖│ • .𝚆𝙸𝙽𝙺*
+*┃❖│ • .𝙵𝙰𝙲𝙴𝙿𝙰𝙻𝙼*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*╭━━〔  📥  𝙶𝙸𝚃𝙷𝚄𝙱 〕━━┈⊷*
+*┃❖│ • .𝙶𝙸𝚃*
+*┃❖│ • .𝙶𝙸𝚃𝙷𝚄𝙱*
+*┃❖│ • .𝚂𝙲*
+*┃❖│ • .𝚂𝙲𝚁𝙸𝙿𝚃*
+*┃❖│ • .𝚁𝙴𝙿𝙾*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
+*𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 ᴡᴇᴇᴅ 𝙼𝙳*`;
+
     try {
-        // Calculate bot uptime
-        const uptime = process.uptime();
-        const days = Math.floor(uptime / (24 * 60 * 60));
-        const hours = Math.floor((uptime % (24 * 60 * 60)) / (60 * 60));
-        const minutes = Math.floor((uptime % (60 * 60)) / 60);
-        const seconds = Math.floor(uptime % 60);
-        
-        // Get memory usage
-        const used = process.memoryUsage();
-        const usedMB = Math.round(used.rss / 1024 / 1024);
-        const totalMB = Math.round(os.totalmem() / 1024 / 1024);
-        const memPercent = Math.round((used.rss / os.totalmem()) * 100);
-        
-        // Calculate speed
-        const speedStart = performance.now();
-        const speedEnd = performance.now();
-        const speed = Math.round(speedEnd - speedStart);
-
-        // Send initial message
-        const statusMsg = await sock.sendMessage(chatId, {
-            text: "🔍 *ZENITSU-BOT* · *Loading...*\n⏳ *Please wait...*"
-        }, { quoted: message });
-
-        // Prepare the stylish menu
-        const menuText = `
-╔═══════════════════════╗
-        ⚡ *Zanitsu Bot* ⚡
-     Status · Contact · Menu
-╚═══════════════════════╝
-
-📅 *${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}*
-
-🤖 *ZENITSU-BOT*
-Version ${settings.version || '1.0.0'} · Active
-
-🔧 *SYSTEM INFO*
-[ ] [ Z E N I T S U -  B O T ]
-► Prefix: [ ${settings.prefix || '.'} ]
-► Owner: ${settings.botOwner || 'Not set!'}
-► Mode: ${settings.privateMode ? 'private' : 'public'}
-► Platform: ▼ ${os.platform()}
-► Speed: ${speed} ms
-► Uptime: ${days}d ${hours}h ${minutes}m ${seconds}s
-► Version: v${settings.version || '1.0.0'}
-► Storage: ▼ ${usedMB} MB of ${totalMB} MB
-► RAM: ▼ ${memPercent}%
-
-⚡ *OWNER MENU*
-• .ban @user
-• .restart
-• .unban @user  
-• .promote @user
-• .demote @user
-• .mode public/private
-• .clearsession
-• .antidelete on/off
-• .cleartmp
-• .update
-• .settings
-• .setpp (reply image)
-• .autoreact on/off
-• .autostatus on/off
-• .autotyping on/off
-• .autoread on/off
-• .anticall on/off
-• .pmblocker on/off/status
-• .pmblocker setmsg <text>
-• .setmention (reply msg/media)
-• .mention on/off
-
-📁 *GENERAL COMMANDS*
-• .help / .menu
-• .ping
-• .alive
-• .owner
-• .tts <text>
-• .joke
-• .quote
-• .fact
-• .weather <city>
-• .news
-• .attp <text>
-• .lyrics <song_title>
-• .8ball <question>
-• .groupinfo
-• .staff / .admins
-• .vv
-• .trt <text> <lang>
-• .ss <link>
-• .jid
-• .url
-
-⚙️ *GROUP ADMIN*
-• .add @user 
-• .close 
-• .open 
-• .ban @user
-• .promote @user
-• .demote @user
-• .mute <minutes>
-• .unmute
-• .delete / .del
-• .kick @user
-• .warnings @user
-• .warn @user
-• .antilink on/off
-• .antibadword on/off
-• .clear
-• .tag <message>
-• .tagall
-• .tagnotadmin
-• .hidetag <message>
-• .chatbot on/off
-• .resetlink
-• .antitag on/off
-• .welcome on/off
-• .goodbye on/off
-• .setgdesc <description>
-• .setgname <new name>
-• .setgpp (reply to image)
-
-🎨 *IMAGE/STICKER*
-• .blur (reply image)
-• .simage (reply sticker)
-• .sticker (reply image)
-• .removebg (reply image)
-• .remini (reply image)
-• .crop (reply image)
-• .tgsticker <Link>
-• .meme
-• .take <packname>
-• .emojimix <emj1>+<emj2>
-• .igs <insta link>
-• .igsc <insta link>
-
-👩 *PIES*
-• .pies <country>
-• .china
-• .indonesia
-• .japan
-• .korea
-• .hijab
-
-🎮 *GAME*
-• .tictactoe @user
-• .hangman
-• .guess <letter>
-• .trivia
-• .answer <answer>
-• .truth
-• .dare
-
-🤖 *AI*
-• .gpt <question>
-• .gemini <question>
-• .imagine <prompt>
-• .flux <prompt>
-• .sora <prompt>
-
-🎭 *FUN*
-• .compliment @user
-• .insult @user
-• .flirt
-• .shayari
-• .goodnight
-• .roseday
-• .character @user
-• .wasted @user
-• .ship @user
-• .simp @user
-• .stupid @user [text]
-
-✨ *TEXTMAKER*
-• .metallic <text>
-• .ice <text>
-• .snow <text>
-• .impressive <text>
-• .matrix <text>
-• .light <text>
-• .neon <text>
-• .devil <text>
-• .purple <text>
-• .thunder <text>
-• .leaves <text>
-• .1917 <text>
-• .arena <text>
-• .hacker <text>
-• .sand <text>
-• .blackpink <text>
-• .glitch <text>
-• .fire <text>
-
-⬇️ *DOWNLOADER*
-• .play <song_name>
-• .song <song_name>
-• .spotify <query>
-• .instagram <link>
-• .facebook <link>
-• .tiktok <link>
-• .video <youtube>
-• .ytmp4 <Link>
-• .apk <query>
-
-🎨 *MISC*
-• .heart
-• .horny
-• .circle
-• .lgbt
-• .lolice
-• .its-so-stupid
-• .namecard
-• .oogway
-• .tweet
-• .ytcomment
-• .comrade
-• .gay
-• .glass
-• .jail
-• .passed
-• .triggered
-
-🎎 *ANIME*
-• .neko
-• .waifu
-• .loli
-• .nom
-• .poke
-• .cry
-• .kiss
-• .pat
-• .hug
-• .wink
-• .facepalm
-
-💻 *GITHUB*
-• .git
-• .github
-• .sc
-• .script
-• .repo
-
-📊 *SYSTEM STATUS*
-✅ Online · ⚡ Active · 🛡️ Secured
-💾 ${usedMB}MB/${totalMB}MB · 📈 ${memPercent}%
-
-⭐ *Powered by Zentisu-BOT*`;
-
-        // Update with menu ready
-        await sock.sendMessage(chatId, {
-            text: "✅ *ZENITSU-BOT* · *Menu Ready*\n📤 *Sending now...*",
-            edit: statusMsg.key
-        });
-
-        // Create forwarding context (same as aliveCommand)
-        const forwardingContext = {
-            forwardingScore: 1,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363406735242612@newsletter',
-                newsletterName: 'Zanitsu bot',
-                serverMessageId: -1
-            }
-        };
-
-        // Try to send with image
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
-        if (fs.existsSync(imagePath)) {
-            try {
-                const imageBuffer = fs.readFileSync(imagePath);
-                
-                await sock.sendMessage(chatId, {
-                    image: imageBuffer,
-                    caption: menuText,
-                    contextInfo: forwardingContext
-                });
-
-                // Delete the status message
-                await sock.sendMessage(chatId, {
-                    delete: statusMsg.key
-                });
-
-            } catch (imageError) {
-                console.error('[MENU] Image error:', imageError);
-                // Fallback to text only with forwarding
-                await sendTextMenu(sock, chatId, menuText, statusMsg, forwardingContext);
-            }
-        } else {
-            // Send text menu if no image
-            await sendTextMenu(sock, chatId, menuText, statusMsg, forwardingContext);
-        }
-
-    } catch (error) {
-        console.error('[ZENITSU-BOT MENU] Error:', error);
         
-        // Send error fallback with forwarding
-        await sock.sendMessage(chatId, {
-            text: `🚫 *SYSTEM ERROR*\n\nFailed to load menu.\nError: ${error.message}`,
-            contextInfo: {
-                forwardingScore: 1,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363406735242612@newsletter',
-                    newsletterName: 'Zanitsu bot',
-                    serverMessageId: -1
+        if (fs.existsSync(imagePath)) {
+            const imageBuffer = fs.readFileSync(imagePath);
+            
+            await sock.sendMessage(chatId, {
+                image: imageBuffer,
+                caption: helpMessage,
+                contextInfo: {
+                    forwardingScore: 1,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363407561123100@newsletter',
+                        newsletterName: 'WEED MD',
+                        serverMessageId: -1
+                    }
                 }
-            }
-        }, { quoted: message });
-    }
-}
-
-async function sendTextMenu(sock, chatId, menuText, statusMsg, forwardingContext) {
-    // Split into multiple messages due to WhatsApp 4096 char limit
-    const parts = splitMenu(menuText, 4000);
-    
-    for (let i = 0; i < parts.length; i++) {
-        if (i === 0) {
-            await sock.sendMessage(chatId, {
-                text: parts[i],
-                contextInfo: forwardingContext
-            });
+            },{ quoted: message });
         } else {
-            await sock.sendMessage(chatId, {
-                text: parts[i]
+            console.error('Bot image not found at:', imagePath);
+            await sock.sendMessage(chatId, { 
+                text: helpMessage,
+                contextInfo: {
+                    forwardingScore: 1,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363407561123100@newsletter',
+                        newsletterName: 'WEED TECH',
+                        serverMessageId: -1
+                    } 
+                }
             });
-            await delay(1000);
         }
+    } catch (error) {
+        console.error('Error in help command:', error);
+        await sock.sendMessage(chatId, { text: helpMessage });
     }
-
-    // Delete the status message
-    await sock.sendMessage(chatId, {
-        delete: statusMsg.key
-    });
-}
-
-function splitMenu(text, maxLength) {
-    const parts = [];
-    const lines = text.split('\n');
-    let currentPart = '';
-    
-    for (const line of lines) {
-        if (currentPart.length + line.length + 1 > maxLength) {
-            parts.push(currentPart);
-            currentPart = line + '\n';
-        } else {
-            currentPart += line + '\n';
-        }
-    }
-    
-    if (currentPart) {
-        parts.push(currentPart);
-    }
-    
-    return parts;
-}
-
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 module.exports = helpCommand;
