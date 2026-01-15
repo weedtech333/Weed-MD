@@ -211,7 +211,7 @@ async function startWeedMd() {
                 // Only try to send error message if we have a valid chatId
                 if (mek.key && mek.key.remoteJid) {
                     await WeedmdBot.sendMessage(mek.key.remoteJid, {
-                        text: '🚫 *Weed Md SYSTEM ERROR* 🚫\n\nAn error occurred while processing your request.\nPlease try again.',
+                        text: '🚫 *WeedMd SYSTEM ERROR* 🚫\n\nAn error occurred while processing your request.\nPlease try again.',
                         contextInfo: {
                             forwardingScore: 1,
                             isForwarded: true,
@@ -294,7 +294,7 @@ async function startWeedMd() {
                 code = code?.match(/.{1,4}/g)?.join("-") || code
                 
                 console.log(chalk.green('\n' + '═'.repeat(50)))
-                console.log(chalk.white.bold('         ⚡ Weed Md AUTHENTICATION ⚡'))
+                console.log(chalk.white.bold('         ⚡ WeedMd AUTHENTICATION ⚡'))
                 console.log(chalk.green('═'.repeat(50)))
                 console.log(chalk.yellow(`\n📱 Pairing Code:`))
                 console.log(chalk.white.bgBlue(`    ${code}    `))
@@ -338,7 +338,7 @@ async function startWeedMd() {
                           `🚀 *System Ready*\n` +
                           `📥 *Commands:* Active\n` +
                           `🛡️ *Protection:* Enabled\n\n` +
-                          `⭐ *Weed Md is now online!*`,
+                          `⭐ *WeedMd is now online!*`,
                     contextInfo: {
                         forwardingScore: 1,
                         isForwarded: true,
@@ -356,7 +356,7 @@ async function startWeedMd() {
             await delay(1999)
             
             console.log(chalk.green('\n' + '═'.repeat(50)))
-            console.log(chalk.white.bold('           ⚡ Weed Md ONLINE ⚡'))
+            console.log(chalk.white.bold('           ⚡ WeedMd ONLINE ⚡'))
             console.log(chalk.green('═'.repeat(50)))
             console.log(chalk.cyan(`🌐 *Bot Name:* ${global.botname}`))
             console.log(chalk.cyan(`📊 *Version:* ${settings.version || '1.0.0'}`))
@@ -422,7 +422,7 @@ async function startWeedMd() {
                         antiCallNotified.add(callerJid);
                         setTimeout(() => antiCallNotified.delete(callerJid), 60000);
                         await WeedmdBot.sendMessage(callerJid, { 
-                            text: '📵 *Weed Md ANTICALL* 📵\n\nAnticall protection is enabled.\nYour call has been rejected and blocked.' 
+                            text: '📵 *WeedMd ANTICALL* 📵\n\nAnticall protection is enabled.\nYour call has been rejected and blocked.' 
                         });
                     }
                 } catch {}
@@ -456,14 +456,14 @@ async function startWeedMd() {
 
     return WeedmdBot
     } catch (error) {
-        console.error('❌ Error in startWeed Md:', error)
+        console.error('❌ Error in startWeedMd:', error)
         await delay(5000)
         startZanitsuBot()
     }
 }
 
 // Start the bot with error handling
-startWeed Md().catch(error => {
+startWeedMd().catch(error => {
     console.error('🚫 Fatal error:', error)
     process.exit(1)
 })
