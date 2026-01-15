@@ -263,7 +263,7 @@ async function startWeedMd() {
         return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
     }
 
-    Weed Md.public = true
+    WeedMd.public = true
 
     WeedmdBot.serializeM = (m) => smsg(WeedmdBot, m, store)
 
@@ -275,7 +275,7 @@ async function startWeedMd() {
         if (!!global.phoneNumber) {
             phoneNumber = global.phoneNumber
         } else {
-            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`\n⚡ *Weed Md SETUP* ⚡\n\n📱 Enter your WhatsApp number:\nFormat: 509xxx (without + or spaces)\n\n👉 Input: `)))
+            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`\n⚡ *WeedMd SETUP* ⚡\n\n📱 Enter your WhatsApp number:\nFormat: 509xxx (without + or spaces)\n\n👉 Input: `)))
         }
 
         // Clean the phone number - remove any non-digit characters
@@ -331,7 +331,7 @@ async function startWeedMd() {
             try {
                 const botNumber = WeedmdBot.user.id.split(':')[0] + '@s.whatsapp.net';
                 await WeedmdBot.sendMessage(botNumber, {
-                    text: `⚡ *Weed Md SYSTEM ONLINE* ⚡\n\n` +
+                    text: `⚡ *WeedMd SYSTEM ONLINE* ⚡\n\n` +
                           `✅ *Status:* Connected Successfully\n` +
                           `⏰ *Time:* ${new Date().toLocaleString()}\n` +
                           `📊 *Version:* ${settings.version || '1.0.0'}\n\n` +
