@@ -165,7 +165,7 @@ async function facebookCommand(sock, chatId, message) {
 
         // Try URL method first (more reliable)
         try {
-            const caption = title ? `𝚆𝚎𝚎𝚍 ᴍᴅ\n\n📝 Title: ${title}` : "𝚆𝚎𝚎𝚍 ᴍᴅ";
+            const caption = title ? `ᴡᴇᴇᴅ ᴍᴅ ɪs ᴛʜᴇ ʙᴇsᴛ🔥\n\n📝 Title: ${title}` : "ᴡᴇᴇᴅ ᴍᴅ ɪs ᴛʜᴇ ʙᴇsᴛ🔥";
             
             await sock.sendMessage(chatId, {
                 video: { url: fbvid },
@@ -216,7 +216,7 @@ async function facebookCommand(sock, chatId, message) {
                 }
 
                 // Send the video
-                const caption = title ? `𝚆𝚎𝚎𝚍 ᴍᴅ\n\n📝 Title: ${title}` : "𝚆𝚎𝚎𝚍 ᴍᴅ";
+                const caption = title ? `ᴡᴇᴇᴅ ᴍᴅ ɪs ᴛʜᴇ ʙᴇsᴛ🔥\n\n📝 Title: ${title}` : "ᴡᴇᴇᴅ ᴍᴅ ɪs ᴛʜᴇ ʙᴇsᴛ🔥";
                 
                 await sock.sendMessage(chatId, {
                     video: { url: tempFile },
