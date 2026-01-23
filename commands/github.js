@@ -13,7 +13,7 @@ async function githubCommand(sock, chatId, message) {
       }
     });
 
-    const res = await fetch('https://github.com/weedtech333/Weed-MD');
+    const res = await fetch('https://api.github.com/repos/weedtech333/Weed-MD');
     if (!res.ok) throw new Error('Error fetching repository data');
     const json = await res.json();
 
