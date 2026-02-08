@@ -76,7 +76,18 @@ async function handleJoinEvent(sock, id, participants) {
                     hour12: true
                 });
                 
-                finalMessage = `╭╼━≪•𝙽𝙴𝚆 𝙼𝙴𝙼𝙱𝙴𝚁•≫━╾╮\n┃𝚆𝙴𝙻𝙲𝙾𝙼𝙴: @${displayName} 👋\n┃Member count: #${groupMetadata.participants.length}\n┃𝚃𝙸𝙼𝙴: ${timeString}⏰\n╰━━━━━━━━━━━━━━━╯\n\n*@${displayName}* Welcome to *${groupName}*! 🎉\n*Group 𝙳𝙴𝚂𝙲𝚁𝙸𝙿𝚃𝙸𝙾𝙽*\n${groupDesc}\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ Knight Bot*`;
+                finalMessage = `
+╔══════════════════════════════════════╗
+║        🎉 𝗪𝗘𝗟𝗖𝗢𝗠𝗘 𝗡𝗘𝗪 𝗠𝗘𝗠𝗕𝗘𝗥 🎉        ║
+╠══════════════════════════════════════╣
+║ 👤 𝗡𝗲𝘄 𝗠𝗲𝗺𝗯𝗲𝗿 : @${displayName}
+║ 👥 𝗠𝗲𝗺𝗯𝗲𝗿 𝗖𝗼𝘂𝗻𝘁 : ${groupMetadata.participants.length}
+║ ⏰ 𝗧𝗶𝗺𝗲 : ${timeString}
+╚══════════════════════════════════════╝
+
+Welcome to *${groupName}* 🎊
+
+Powered by *Weed Tech*`;
             }
             
             // Try to send with image first (always try images)
