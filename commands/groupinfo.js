@@ -2,7 +2,7 @@ async function groupInfoCommand(sock, chatId, msg) {
     try {
         // Get group metadata
         const groupMetadata = await sock.groupMetadata(chatId);
-        
+
         // Get group profile picture
         let pp;
         try {
@@ -14,28 +14,30 @@ async function groupInfoCommand(sock, chatId, msg) {
         // Get admins from participants
         const participants = groupMetadata.participants;
         const groupAdmins = participants.filter(p => p.admin);
-        const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n');
-        
+        const listAdmin = groupAdmins
+            .map((v, i) => `│ ⭐ ${i + 1}. @${v.id.split('@')[0]}`)
+            .join('\n');
+
         // Get group owner
         const owner = groupMetadata.owner || groupAdmins.find(p => p.admin === 'superadmin')?.id || chatId.split('-')[0] + '@s.whatsapp.net';
 
-        // Create info text
+        // Create boxed/fancy card text
         const text = `
-┌──「 *INFO GROUP* 」
-▢ *♻️ID:*
-   • ${groupMetadata.id}
-▢ *🔖NAME* : 
-• ${groupMetadata.subject}
-▢ *👥Members* :
-• ${participants.length}
-▢ *🤿Group Owner:*
-• @${owner.split('@')[0]}
-▢ *🕵🏻‍♂️Admins:*
+╭───────────────╮
+│ 🍭 WEED MD GROUP INFO 🍭 │
+├───────────────┤
+│ 🆔 GROUP ID: ${groupMetadata.id}
+│ 🏷️ NAME: ${groupMetadata.subject}
+│ 👥 MEMBERS COUNT: ${participants.length}
+│ 👑 OWNER: @${owner.split('@')[0]}
+│ 🛡️ ADMINS:
 ${listAdmin}
-
-▢ *📌Description* :
-   • ${groupMetadata.desc?.toString() || 'No description'}
-`.trim();
+│ 📝 DESCRIPTION:
+│ ${groupMetadata.desc?.toString() || 'No description'}
+╰───────────────╯
+✨ Powered by 💧 WEED MD
+💌 Tip: Stay active & enjoy your group!
+`;
 
         // Send the message with image and mentions
         await sock.sendMessage(chatId, {
@@ -46,8 +48,8 @@ ${listAdmin}
 
     } catch (error) {
         console.error('Error in groupinfo command:', error);
-        await sock.sendMessage(chatId, { text: 'Failed to get group info!' });
+        await sock.sendMessage(chatId, { text: '❌ Failed to get group info!' });
     }
 }
 
-module.exports = groupInfoCommand; 
+module.exports = groupInfoCommand;
