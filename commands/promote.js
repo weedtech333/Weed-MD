@@ -1,91 +1,74 @@
 const { isAdmin } = require('../lib/isAdmin');
 
-// Function to handle manual promotions via command
+// Manual promotion command
 async function promoteCommand(sock, chatId, mentionedJids, message) {
     let userToPromote = [];
-    
-    // Check for mentioned users
-    if (mentionedJids && mentionedJids.length > 0) {
+
+    if (mentionedJids?.length) {
         userToPromote = mentionedJids;
-    }
-    // Check for replied message
-    else if (message.message?.extendedTextMessage?.contextInfo?.participant) {
+    } else if (message.message?.extendedTextMessage?.contextInfo?.participant) {
         userToPromote = [message.message.extendedTextMessage.contextInfo.participant];
     }
-    
-    // If no user found through either method
-    if (userToPromote.length === 0) {
+
+    if (!userToPromote.length) {
         await sock.sendMessage(chatId, { 
-            text: 'Please mention the user or reply to their message to promote!'
+            text: '⚠️ Please mention the user or reply to their message to promote!'
         });
         return;
     }
 
     try {
-        await sock.groupParticipantsUpdate(chatId, userToPromote, "promote");
-        
-        // Get usernames for each promoted user
-        const usernames = await Promise.all(userToPromote.map(async jid => {
-            
-            return `@${jid.split('@')[0]}`;
-        }));
+        await sock.groupParticipantsUpdate(chatId, userToPromote, 'promote');
 
-        // Get promoter's name (the bot user in this case)
+        const usernames = userToPromote.map(jid => `@${jid.split('@')[0]}`);
         const promoterJid = sock.user.id;
-        
-        const promotionMessage = `*『 GROUP PROMOTION 』*\n\n` +
-            `👥 *Promoted User${userToPromote.length > 1 ? 's' : ''}:*\n` +
-            `${usernames.map(name => `• ${name}`).join('\n')}\n\n` +
-            `👑 *Promoted By:* @${promoterJid.split('@')[0]}\n\n` +
-            `📅 *Date:* ${new Date().toLocaleString()}`;
+
+        // Demi-ankadreman style
+        const promotionMessage = `
+╭─🎉 GROUP PROMOTION 🎉─╮
+│ 👥 Promoted User${userToPromote.length > 1 ? 's' : ''}:
+│ ${usernames.map(name => `• ${name}`).join('\n│ ')}
+│ 👑 Promoted By: @${promoterJid.split('@')[0]}
+│ 📅 ${new Date().toLocaleString()}
+╰───────────────────╯
+`;
+
         await sock.sendMessage(chatId, { 
             text: promotionMessage,
             mentions: [...userToPromote, promoterJid]
         });
-    } catch (error) {
-        console.error('Error in promote command:', error);
-        await sock.sendMessage(chatId, { text: 'Failed to promote user(s)!'});
+    } catch (err) {
+        console.error('Error in promote command:', err);
+        await sock.sendMessage(chatId, { 
+            text: `❌ Failed to promote user(s)!\nError: ${err.message}` 
+        });
     }
 }
 
-// Function to handle automatic promotion detection
+// Automatic promotion event handler
 async function handlePromotionEvent(sock, groupId, participants, author) {
     try {
-       /* console.log('Promotion Event Data:', {
-            groupId,
-            participants,
-            author
-        });*/
-
-        // Get usernames for promoted participants
-        const promotedUsernames = await Promise.all(participants.map(async jid => {
-            return `@${jid.split('@')[0]} `;
-        }));
-
-        let promotedBy;
+        const promotedUsernames = participants.map(jid => `@${jid.split('@')[0]}`);
         let mentionList = [...participants];
+        let promotedBy = author ? `@${author.split('@')[0]}` : 'System';
 
-        if (author && author.length > 0) {
-            // Ensure author has the correct format
-            const authorJid = author;
-            promotedBy = `@${authorJid.split('@')[0]}`;
-            mentionList.push(authorJid);
-        } else {
-            promotedBy = 'System';
-        }
+        if (author) mentionList.push(author);
 
-        const promotionMessage = `*『 GROUP PROMOTION 』*\n\n` +
-            `👥 *Promoted User${participants.length > 1 ? 's' : ''}:*\n` +
-            `${promotedUsernames.map(name => `• ${name}`).join('\n')}\n\n` +
-            `👑 *Promoted By:* ${promotedBy}\n\n` +
-            `📅 *Date:* ${new Date().toLocaleString()}`;
-        
+        const promotionMessage = `
+╭─🎉 GROUP PROMOTION 🎉─╮
+│ 👥 Promoted User${participants.length > 1 ? 's' : ''}:
+│ ${promotedUsernames.map(name => `• ${name}`).join('\n│ ')}
+│ 👑 Promoted By: ${promotedBy}
+│ 📅 ${new Date().toLocaleString()}
+╰───────────────────╯
+`;
+
         await sock.sendMessage(groupId, {
             text: promotionMessage,
             mentions: mentionList
         });
-    } catch (error) {
-        console.error('Error handling promotion event:', error);
+    } catch (err) {
+        console.error('Error handling promotion event:', err);
     }
 }
 
