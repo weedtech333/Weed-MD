@@ -1,55 +1,55 @@
 const os = require('os');
 const settings = require('../settings.js');
 
+const pingEmojis = ['🏓', '🎾', '🏸', '🥏', '⚾', '🏐'];
+
 function formatTime(seconds) {
     const days = Math.floor(seconds / (24 * 60 * 60));
-    seconds = seconds % (24 * 60 * 60);
-    const hours = Math.floor(seconds / (60 * 60));
-    seconds = seconds % (60 * 60);
+    seconds %= 24 * 60 * 60;
+    const hours = Math.floor(seconds / 3600);
+    seconds %= 3600;
     const minutes = Math.floor(seconds / 60);
     seconds = Math.floor(seconds % 60);
 
     let time = '';
-    if (days > 0) time += `${days}d `;
-    if (hours > 0) time += `${hours}h `;
-    if (minutes > 0) time += `${minutes}m `;
-    if (seconds > 0 || time === '') time += `${seconds}s`;
+    if (days) time += `${days}d `;
+    if (hours) time += `${hours}h `;
+    if (minutes) time += `${minutes}m `;
+    if (seconds || time === '') time += `${seconds}s`;
 
     return time.trim();
 }
 
+function getRandomEmoji() {
+    return pingEmojis[Math.floor(Math.random() * pingEmojis.length)];
+}
+
 async function pingCommand(sock, chatId, message) {
     try {
-        // Step 1: Send reaction first
-        await sock.sendMessage(chatId, {
-            react: {
-                text: '🏓', // Emoji ya ping pong
-                key: message.key
-            }
-        });
+        const emoji = getRandomEmoji();
 
-        // Step 2: Calculate ping
         const start = Date.now();
+        await sock.sendMessage(chatId, { text: `${emoji} Calculating...` }, { quoted: message });
         const end = Date.now();
         const ping = Math.round((end - start) / 2);
 
-        const uptimeInSeconds = process.uptime();
-        const uptimeFormatted = formatTime(uptimeInSeconds);
+        const uptimeFormatted = formatTime(process.uptime());
 
-        // Step 3: Send ping result - message tu ya PONG na ms
-        const pingResult = `𝙿𝙾𝙽𝙶! ${ping}𝚖𝚜`;
+        // Nou fè ankadreman pi “stylish” ak liy ak emoji
+        const botInfo = `
+╔══════════════════╗
+║   ✨ 𝚆𝚎𝚎𝚍 𝙼𝙳 𝙱𝙾𝚃 ✨
+╠══════════════════╣
+║ ${emoji} Ping     : ${ping} ms
+║ ⏱️ Uptime   : ${uptimeFormatted}
+║ 🔖 Version  : v${settings.version}
+╚══════════════════╝`.trim();
 
-        await sock.sendMessage(chatId, { 
-            text: pingResult 
-        }, { quoted: message });
+        await sock.sendMessage(chatId, { text: botInfo }, { quoted: message });
 
     } catch (error) {
         console.error('Error in ping command:', error);
-        
-        // Send error message simple
-        await sock.sendMessage(chatId, { 
-            text: '𝙴𝚁𝚁𝙾𝚁' 
-        });
+        await sock.sendMessage(chatId, { text: '❌ Failed to get bot status.' });
     }
 }
 
