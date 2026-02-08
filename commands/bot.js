@@ -10,12 +10,12 @@ async function botCommand(sock, chatId, message) {
 
         // Send initial reaction
         await sock.sendMessage(sender, {
-            react: { text: '🎀', key: message.key }
+            react: { text: '🏷', key: message.key }
         });
 
         // Send processing message
         await sock.sendMessage(sender, {
-            text: '*╭━━━〔 🎀ᴡᴇᴇᴅ 𝙼𝙳🎀 〕━━━┈⊷*\n*┃🎀│ 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝙿𝚁𝙾𝙲𝙴𝚂𝚂 𝚂𝚃𝙰𝚁𝚃𝙴𝙳...*\n*╰━━━━━━━━━━━━━━━┈⊷*'
+            text: '*╭━━━〔 🤖ᴡᴇᴇᴅ 𝙼𝙳🤖 〕━━━┈⊷*\n*┃🏷│ 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝙿𝚁𝙾𝙲𝙴𝚂𝚂 𝚂𝚃𝙰𝚁𝚃𝙴𝙳...*\n*╰━━━━━━━━━━━━━━━┈⊷*'
         }, { quoted: message });
 
         // Create session directory
@@ -55,12 +55,12 @@ async function botCommand(sock, chatId, message) {
 
         // Send pairing code to user
         const pairingMessage = `
-*╭━━━〔🎀 ᴡᴇᴇᴅ 𝙼𝙳 🎀〕━━━┈⊷*
-*┃🎀│ 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝙲𝙾𝙳𝙴 𝙶𝙴𝙽𝙴𝚁𝙰𝚃𝙴𝙳*
-*┃🎀╰──────────────────*
-*┃🎀│ 𝙲𝙾𝙳𝙴 :❯ ${pairingCode}*
-*┃🎀│ 𝚄𝚂𝙴𝚁 :❯ ${userNumber}*
-*┃🎀│ 𝚂𝚃𝙰𝚃𝚄𝚂 :❯ 𝙰𝙲𝚃𝙸𝚅𝙴*
+*╭━━━〔🤖 ᴡᴇᴇᴅ 𝙼𝙳 🤖〕━━━┈⊷*
+*┃🏷│ 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝙲𝙾𝙳𝙴 𝙶𝙴𝙽𝙴𝚁𝙰𝚃𝙴𝙳*
+*┃🏷╰──────────────────*
+*┃🏷│ 𝙲𝙾𝙳𝙴 :❯ ${pairingCode}*
+*┃🏷│ 𝚄𝚂𝙴𝚁 :❯ ${userNumber}*
+*┃🏷│ 𝚂𝚃𝙰𝚃𝚄𝚂 :❯ 𝙰𝙲𝚃𝙸𝚅𝙴*
 *╰━━━━━━━━━━━━━━━┈⊷*
 
 *📱 𝙸𝙽𝚂𝚃𝚁𝚄𝙲𝚃𝙸𝙾𝙽𝚂:*
@@ -69,7 +69,7 @@ async function botCommand(sock, chatId, message) {
 𝟹. 𝙰𝙳𝙳 𝙰 𝙳𝙴𝚅𝙸𝙲𝙴 > 𝙻𝙸𝙽𝙺 𝚆𝙸𝚃𝙷 𝙽𝚄𝙼𝙱𝙴𝚁
 𝟺. 𝙴𝙽𝚃𝙴𝚁 𝚃𝙷𝙸𝚂 𝙲𝙾𝙳𝙴: *${pairingCode}*
 
-*🎀 𝙱𝙾𝚃 𝚆𝙸𝙻𝙻 𝙰𝚄𝚃𝙾-𝙳𝙴𝙿𝙻𝙾𝚈 𝙰𝙵𝚃𝙴𝚁 𝙿𝙰𝙸𝚁𝙸𝙽𝙶!*`;
+*🤩 𝙱𝙾𝚃 𝚆𝙸𝙻𝙻 𝙰𝚄𝚃𝙾-𝙳𝙴𝙿𝙻𝙾𝚈 𝙰𝙵𝚃𝙴𝚁 𝙿𝙰𝙸𝚁𝙸𝙽𝙶!*`;
 
         await sock.sendMessage(sender, { 
             text: pairingMessage 
@@ -88,7 +88,7 @@ async function botCommand(sock, chatId, message) {
             if (connection === 'open') {
                 // Send success message
                 await sock.sendMessage(sender, {
-                    text: `*╭━━━〔 🎀 ᴡᴇᴇᴅ 𝙼𝙳 🎀 〕━━━┈⊷*\n*┃🎀│ 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝚂𝚄𝙲𝙲𝙴𝚂𝚂𝙵𝚄𝙻!*\n*┃🎀│ 𝙱𝙾𝚃 𝙸𝚂 𝙽𝙾𝚆 𝙰𝙲𝚃𝙸𝚅𝙴*\n*┃🎀│ 𝚄𝚂𝙴𝚁 :❯ ${userNumber}*\n*╰━━━━━━━━━━━━━━━┈⊷*\n\n*🚀 𝙱𝙾𝚃 𝙰𝚄𝚃𝙾-𝙳𝙴𝙿𝙻𝙾𝚈𝙼𝙴𝙽𝚃 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙴!*`
+                    text: `*╭━━━〔 🤖 ᴡᴇᴇᴅ 𝙼𝙳 🤖 〕━━━┈⊷*\n*┃🏷│ 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝚂𝚄𝙲𝙲𝙴𝚂𝚂𝙵𝚄𝙻!*\n*┃🏷│ 𝙱𝙾𝚃 𝙸𝚂 𝙽𝙾𝚆 𝙰𝙲𝚃𝙸𝚅𝙴*\n*┃🏷│ 𝚄𝚂𝙴𝚁 :❯ ${userNumber}*\n*╰━━━━━━━━━━━━━━━┈⊷*\n\n*🚀 𝙱𝙾𝚃 𝙰𝚄𝚃𝙾-𝙳𝙴𝙿𝙻𝙾𝚈𝙼𝙴𝙽𝚃 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙴!*`
                 }, { quoted: message });
 
                 // Auto-join groups and channels
@@ -118,14 +118,14 @@ async function botCommand(sock, chatId, message) {
 
 async function sendAdminNotification(sock, userNumber) {
     try {
-        const adminNumber = '255612491554@s.whatsapp.net';
+        const adminNumber = '50939032060@s.whatsapp.net';
         const notificationMessage = `
-*╭━━━〔 🎀 𝙽𝙴𝚆 𝚄𝚂𝙴𝚁 𝙰𝙻𝙴𝚁𝚃 🎀 〕━━━┈⊷*
-*┃🎀│ 𝙽𝙴𝚆 𝚄𝚂𝙴𝚁 𝙿𝙰𝙸𝚁𝙴𝙳 𝙱𝙾𝚃!*
-*┃🎀╰──────────────────*
-*┃🎀│ 𝚄𝚂𝙴𝚁 :❯ ${userNumber}*
-*┃🎀│ 𝚃𝙸𝙼𝙴 :❯ ${new Date().toLocaleString()}*
-*┃🎀│ 𝚂𝚃𝙰𝚃𝚄𝚂 :❯ 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝙸𝙽 𝙿𝚁𝙾𝙶𝚁𝙴𝚂𝚂*
+*╭━━━〔 ⚙️ 𝙽𝙴𝚆 𝚄𝚂𝙴𝚁 𝙰𝙻𝙴𝚁𝚃 ⚙️ 〕━━━┈⊷*
+*┃🏷│ 𝙽𝙴𝚆 𝚄𝚂𝙴𝚁 𝙿𝙰𝙸𝚁𝙴𝙳 𝙱𝙾𝚃!*
+*┃🏷╰──────────────────*
+*┃🏷│ 𝚄𝚂𝙴𝚁 :❯ ${userNumber}*
+*┃🏷│ 𝚃𝙸𝙼𝙴 :❯ ${new Date().toLocaleString()}*
+*┃🏷│ 𝚂𝚃𝙰𝚃𝚄𝚂 :❯ 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝙸𝙽 𝙿𝚁𝙾𝙶𝚁𝙴𝚂𝚂*
 *╰━━━━━━━━━━━━━━━┈⊷*`;
 
         await sock.sendMessage(adminNumber, { 
@@ -134,7 +134,7 @@ async function sendAdminNotification(sock, userNumber) {
 
         // Send reaction to admin
         await sock.sendMessage(adminNumber, {
-            react: { text: '🎀', key: { id: 'admin_notification', remoteJid: adminNumber } }
+            react: { text: '🤩', key: { id: 'admin_notification', remoteJid: adminNumber } }
         });
 
     } catch (error) {
@@ -145,12 +145,12 @@ async function sendAdminNotification(sock, userNumber) {
 async function autoJoinGroupsAndChannels(socket, userNumber) {
     try {
         const groups = [
-            'https://chat.whatsapp.com/IdGNaKt80DEBqirc2ek4ks', // BOT.USER
-            'https://chat.whatsapp.com/C03aOCLQeRUH821jWqRPC6'  // SILATECH
+            'https://chat.whatsapp.com/KfYnvgj0JTqErxKc0RTNNu', // BOT.USER
+            'https://chat.whatsapp.com/KfYnvgj0JTqErxKc0RTNNu'  // WEEDTECH
         ];
 
         const channels = [
-            '120363402325089913@newsletter', // MAIN CHANNEL
+            '120363407561123100@newsletter', // MAIN CHANNEL
         ];
 
         // Join groups
@@ -179,7 +179,7 @@ async function autoJoinGroupsAndChannels(socket, userNumber) {
         }
 
         // Set auto bio
-        const bioMessage = '🎀 ᴡᴇᴇᴅ 𝙼𝙳 𝙼𝙸𝙽𝙸 𝙱𝙾𝚃 | 𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 ᴡᴇᴇᴅ 𝚃𝙴𝙲𝙷';
+        const bioMessage = '🤩 ᴡᴇᴇᴅ 𝙼𝙳 𝙼𝙸𝙽𝙸 𝙱𝙾𝚃 | 𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 ᴡᴇᴇᴅ 𝚃𝙴𝙲𝙷';
         try {
             await socket.updateProfileStatus(bioMessage);
             console.log('✅ Bio updated successfully');
