@@ -236,20 +236,20 @@ async function startXeonBotInc() {
                     forwardingScore: 1,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363402325089913@newsletter',
-                        newsletterName: 'SILA TECH',
+                        newsletterJid: '120363407561123100@newsletter',
+                        newsletterName: 'WEED TECH',
                         serverMessageId: -1
                     }
                 }
             });
 
             await delay(1999)
-            console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || 'SILA MD'} ]`)}\n\n`))
+            console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || 'WEED MD'} ]`)}\n\n`))
             console.log(chalk.cyan(`< ================================================== >`))
-            console.log(chalk.magenta(`\n${global.themeemoji || '•'} YT CHANNEL: SILATRIX22`))
-            console.log(chalk.magenta(`${global.themeemoji || '•'} GITHUB: Sila-Md`))
+            console.log(chalk.magenta(`\n${global.themeemoji || '•'} YT CHANNEL: WeedTech`))
+            console.log(chalk.magenta(`${global.themeemoji || '•'} GITHUB: Weed-Md`))
             console.log(chalk.magenta(`${global.themeemoji || '•'} WA NUMBER: ${owner}`))
-            console.log(chalk.magenta(`${global.themeemoji || '•'} CREDIT: Sir SILA`))
+            console.log(chalk.magenta(`${global.themeemoji || '•'} CREDIT: Is Weed`))
             console.log(chalk.green(`${global.themeemoji || '•'} 🤖 Bot Connected Successfully! ✅`))
         }
         if (connection === 'close') {
