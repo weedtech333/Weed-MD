@@ -11,7 +11,7 @@ async function ownerCommand(sock, chatId, message) {
             }
         });
 
-        const imageUrl = '𝚛𝚛𝚛𝚛𝚛𝚛𝚛𝚛';
+        const imageUrl = 'https://files.catbox.moe/clprwz.jpg';
         
         // Download the image
         const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
