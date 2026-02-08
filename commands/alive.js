@@ -5,32 +5,30 @@ async function aliveCommand(sock, chatId, message) {
         // Step 1: Send reaction first
         await sock.sendMessage(chatId, {
             react: {
-                text: '😎', // Emoji ya kucheka
+                text: '🤖', // Emoji tech
                 key: message.key
             }
         });
 
         const aliveMessage = `
-*╭━━━〔 🎐 ᴡᴇᴇᴅ 𝙼𝙳 🎐 〕━━━┈⊷*
-*┃🎀╭──────────────────*
-*┃🎀│ 𝚂𝚃𝙰𝚃𝚄𝚂 :❯ 𝙾𝙽𝙻𝙸𝙽𝙴*
-*┃🎀│ 𝙼𝙾𝙳𝙴 :❯ 𝙿𝚄𝙱𝙻𝙸𝙲*
-*┃🎀│ 𝚅𝙴𝚁𝚂𝙸𝙾𝙽 :❯ ${settings.version || '1.𝟶.𝟶'}*
-*┃🎀╰──────────────────*
-*╰━━━━━━━━━━━━━━━┈⊷*
+*🤖 𝗪𝗘𝗘𝗗 𝗠𝗗 🤖*
 
-*𝙱𝙾𝚃 𝙸𝚂 𝙰𝙲𝚃𝙸𝚅𝙴 𝙰𝙽𝙳 𝚁𝚄𝙽𝙽𝙸𝙽𝙶! 🎀*
+*🖥 STATUS:* ONLINE
+*🌐 MODE:* PUBLIC
+*📦 VERSION:* ${settings.version || '1.0.0'}
+*🆔 GROUP JID:* ${chatId}
 
-*╭━━〔 🎐 𝙵𝙴𝙰𝚃𝚄𝚁𝙴𝚂 🎐 〕━━┈⊷*
-*┃🎀│ • 𝙶𝚁𝙾𝚄𝙿 𝙼𝙰𝙽𝙰𝙶𝙴𝙼𝙴𝙽𝚃*
-*┃🎀│ • 𝙰𝙽𝚃𝙸𝙻𝙸𝙽𝙺 𝙿𝚁𝙾𝚃𝙴𝙲𝚃𝙸𝙾𝙽*
-*┃🎀│ • 𝙵𝚄𝙽 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂*
-*┃🎀│ • 𝙰𝙸 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂*
-*┃🎀│ • 𝙳𝙾𝚆𝙽𝙻𝙾𝙰𝙳𝙴𝚁*
-*┃🎀│ • 𝙼𝙾𝚁𝙴 𝙵𝙴𝙰𝚃𝚄𝚁𝙴𝚂*
-*╰━━━━━━━━━━━━━━━┈⊷*
+*⚡ BOT IS ACTIVE & RUNNING!*
 
-*𝚃𝚈𝙿𝙴 .𝙼𝙴𝙽𝚄 𝙵𝙾𝚁 𝙵𝚄𝙻𝙻 𝙲𝙾𝙼𝙼𝙰𝙽𝙳 𝙻𝙸𝚂𝚃*`;
+*✨ FEATURES:*
+- 💾 Group Management
+- 🔗 Anti-Link Protection
+- 🎮 Fun Commands
+- 🧠 AI Commands
+- ⬇️ Downloader
+- 🔹 More Features
+
+*💡 TYPE .menu FOR FULL COMMAND LIST*`;
 
         await sock.sendMessage(chatId, {
             text: aliveMessage,
@@ -47,7 +45,7 @@ async function aliveCommand(sock, chatId, message) {
     } catch (error) {
         console.error('Error in alive command:', error);
         await sock.sendMessage(chatId, { 
-            text: '*𝙱𝙾𝚃 𝙸𝚂 𝙰𝙻𝙸𝚅𝙴 𝙰𝙽𝙳 𝚁𝚄𝙽𝙽𝙸𝙽𝙶! 🎀*' 
+            text: '🤖 BOT IS ONLINE & RUNNING! ⚡' 
         }, { quoted: message });
     }
 }
