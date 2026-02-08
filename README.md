@@ -13,7 +13,7 @@
 ---
 
 <p align="center">
-  <a href="https://github.com/WeedTech">
+  <a href="https://github.com/weedtech333">
     <img title="Author" src="https://img.shields.io/badge/Author-Weed%20Tech-ff004d?style=for-the-badge&logo=github&logoColor=white" />
   </a>
   <a href="https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V">
