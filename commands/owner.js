@@ -6,12 +6,12 @@ async function ownerCommand(sock, chatId, message) {
         // Step 1: Send reaction first
         await sock.sendMessage(chatId, {
             react: {
-                text: '🐢', // Emoji ya taji
+                text: '🤩', // Emoji ya taji
                 key: message.key
             }
         });
 
-        const imageUrl = 'https://files.catbox.moe/jwmx1j.jpg';
+        const imageUrl = '𝚛𝚛𝚛𝚛𝚛𝚛𝚛𝚛';
         
         // Download the image
         const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
@@ -29,12 +29,12 @@ END:VCARD
         // Send image first
         await sock.sendMessage(chatId, {
             image: imageBuffer,
-            caption: `*╭━━━〔 🐢 𝙾𝚆𝙽𝙴𝚁 𝙸𝙽𝙵𝙾 🐢 〕━━━┈⊷*\n` +
-                   `*┃🐢│ 𝙽𝙰𝙼𝙴 :❯ ${settings.botOwner}*\n` +
-                   `*┃🐢│ 𝙽𝚄𝙼𝙱𝙴𝚁 :❯ ${settings.ownerNumber}*\n` +
-                   `*┃🐢│ 𝙱𝙾𝚃 :❯ 𝚂𝙸𝙻𝙰 𝙼𝙳*\n` +
+            caption: `*╭━━━〔 ⚙️ 𝙾𝚆𝙽𝙴𝚁 𝙸𝙽𝙵𝙾 ⚙️ 〕━━━┈⊷*\n` +
+                   `*┃🏷│ 𝙽𝙰𝙼𝙴 :❯ ${settings.botOwner}*\n` +
+                   `*┃🏷│ 𝙽𝚄𝙼𝙱𝙴𝚁 :❯ ${settings.ownerNumber}*\n` +
+                   `*┃🏷│ 𝙱𝙾𝚃 :❯ 𝚆𝙴𝙴𝙳 𝙼𝙳*\n` +
                    `*╰━━━━━━━━━━━━━━━┈⊷*\n\n` +
-                   `*𝙲𝙾𝙽𝚃𝙰𝙲𝚃 𝙾𝚆𝙽𝙴𝚁 𝙵𝙾𝚁 𝙰𝙽𝚈 𝙷𝙴𝙻𝙿! 🐢*`
+                   `*𝙲𝙾𝙽𝚃𝙰𝙲𝚃 𝙾𝚆𝙽𝙴𝚁 𝙵𝙾𝚁 𝙰𝙽𝚈 𝙷𝙴𝙻𝙿! 🤩*`
         }, { quoted: message });
 
         // Send vcard contact
@@ -67,3 +67,4 @@ END:VCARD
 }
 
 module.exports = ownerCommand;
+
