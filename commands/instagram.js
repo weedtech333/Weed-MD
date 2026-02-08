@@ -113,12 +113,12 @@ async function instagramCommand(sock, chatId, message) {
                     await sock.sendMessage(chatId, {
                         video: { url: mediaUrl },
                         mimetype: "video/mp4",
-                        caption: "𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗𝗘𝗗 𝗕𝗬 𝙎𝙄𝙇𝘼 𝙈𝘿 -𝗕𝗢𝗧"
+                        caption: "ᴡᴇᴇᴅ ᴍᴅ ᴏɴ ғɪʀᴇ🔥"
                     }, { quoted: message });
                 } else {
                     await sock.sendMessage(chatId, {
                         image: { url: mediaUrl },
-                        caption: "𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗𝗘𝗗 𝗕𝗬 𝙎𝙄𝙇𝘼 𝙈𝘿"
+                        caption: "ᴡᴇᴇᴅ ᴍᴅ ᴏɴ ғɪʀᴇ🔥"
                     }, { quoted: message });
                 }
                 
