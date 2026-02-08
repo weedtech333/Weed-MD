@@ -187,7 +187,7 @@ async function helpCommand(sock, chatId, message, pushname, config) {
 │ ▶ ${prefix}repo
 ╰───────────────╯
 
-*Powered by SILA MD*`;
+*Powered by Dev Weed*`;
 
     try {
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
@@ -201,8 +201,8 @@ async function helpCommand(sock, chatId, message, pushname, config) {
                     forwardingScore: 1,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363402325089913@newsletter',
-                        newsletterName: 'SILA MD',
+                        newsletterJid: '120363407561123100@newsletter',
+                        newsletterName: 'WEED MD',
                         serverMessageId: -1
                     }
                 }
@@ -214,8 +214,8 @@ async function helpCommand(sock, chatId, message, pushname, config) {
                     forwardingScore: 1,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363402325089913@newsletter',
-                        newsletterName: 'SILA TECH',
+                        newsletterJid: '120363407561123100@newsletter',
+                        newsletterName: 'WEED TECH',
                         serverMessageId: -1
                     }
                 }
