@@ -22,7 +22,7 @@
 
 ## 🧚‍♂️ CHARLESKE'S DEPLOYMENT OPTIONS
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Black+Ops+One&size=45&pause=1000&color=FF00FF&center=true&vCenter=true&width=1000&lines=LIST-DEPLOY+NOW;Modern+Bot+DEPLOY+GUIDE" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Black+Ops+One&size=45&pause=1000&color=00FFFF&center=true&vCenter=true&width=1000&lines=LIST-DEPLOY+NOW;Modern+Bot+DEPLOY+GUIDE" alt="Typing SVG" />
 </p>
 
 ### 🔹 DEPLOY ON HEROKU
