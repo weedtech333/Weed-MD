@@ -122,7 +122,7 @@ const soraCommand = require('./commands/sora');
 global.packname = settings.packname;
 global.author = settings.author;
 global.channelLink = settings.mainChannel;
-global.ytch = "weedtech333";
+global.ytch = "silatrix22";
 
 // Channel info with updated JID
 const channelInfo = {
@@ -131,7 +131,7 @@ const channelInfo = {
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
             newsletterJid: settings.newsletterJid,
-            newsletterName: 'WEED TECH',
+            newsletterName: 'SILA TECH',
             serverMessageId: -1
         }
     }
