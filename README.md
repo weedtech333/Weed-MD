@@ -35,9 +35,6 @@
 - **Render:**  
 [![Deploy Now](https://img.shields.io/badge/➤Deploy-Render-000000?style=for-the-badge&logo=render&logoColor=white)](https://render.com)
 
-- **ToyStack:**  
-[![Deploy Now](https://img.shields.io/badge/➤Deploy-ToyStack-FF4500?style=for-the-badge&logoColor=white)](https://toystack.ai)
-
 - **Koyeb:**  
 [![Deploy Now](https://img.shields.io/badge/➤Deploy-Koyeb-00FF7F?style=for-the-badge&logoColor=white)](https://koyeb.com)
 
@@ -45,7 +42,7 @@
 [![Deploy Now](https://img.shields.io/badge/➤Deploy-Talkdrove-FF1493?style=for-the-badge&logoColor=white)](https://host.talkdrove.com/auth/signup?ref=7D90F312)
 
 - **SUPPORT:**  
-[![Support](https://img.shields.io/badge/➤Support-FFD700?style=for-the-badge&logoColor=black)](https://charleske-surpot.vercel.app/)
+[![Support](https://img.shields.io/badge/➤Support-FFD700?style=for-the-badge&logoColor=black)](
 
 
 ## 👨‍💻 Developer Support 🙏
