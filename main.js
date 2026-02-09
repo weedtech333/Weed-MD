@@ -146,7 +146,7 @@ const soraCommand = require('./commands/sora');
 // Global settings
 global.packname = settings.packname;
 global.author = settings.author;
-global.channelLink = "";
+global.channelLink = "settings.mainchannel";
 global.ytch = "Weed Tech";
 
 // Add this near the top of main.js with other global configurations
