@@ -2,63 +2,54 @@ const yts = require('yt-search');
 const axios = require('axios');
 
 async function playCommand(sock, chatId, message) {
-    try {
-        const text = message.message?.conversation || message.message?.extendedTextMessage?.text;
-        const searchQuery = text.split(' ').slice(1).join(' ').trim();
-        
-        if (!searchQuery) {
-            return await sock.sendMessage(chatId, { 
-                text: "What song do you want to download?"
-            });
-        }
+  try {
+    // Get text safely
+    const text =
+      message?.message?.conversation ||
+      message?.message?.extendedTextMessage?.text ||
+      '';
 
-        // Search for the song
-        const { videos } = await yts(searchQuery);
-        if (!videos || videos.length === 0) {
-            return await sock.sendMessage(chatId, { 
-                text: "No songs found!"
-            });
-        }
+    const args = text.trim().split(/\s+/).slice(1);
+    const searchQuery = args.join(' ');
 
-        // Send loading message
-        await sock.sendMessage(chatId, {
-            text: "_Please wait your download is in progress_"
-        });
+    if (!searchQuery)
+      return sock.sendMessage(chatId, { text: "❌ Please enter a song name!" });
 
-        // Get the first video result
-        const video = videos[0];
-        const urlYt = video.url;
+    // Search YouTube
+    const search = await yts(searchQuery);
+    const video = search.videos?.[0];
+    if (!video)
+      return sock.sendMessage(chatId, { text: "❌ No songs found!" });
 
-        // Fetch audio data from API
-        const response = await axios.get(`https://apis-keith.vercel.app/download/dlmp3?url=${urlYt}`);
-        const data = response.data;
+    // Loading message
+    await sock.sendMessage(chatId, { text: "_⏳ Downloading your song, please wait..._" });
 
-        if (!data || !data.status || !data.result || !data.result.downloadUrl) {
-            return await sock.sendMessage(chatId, { 
-                text: "Failed to fetch audio from the API. Please try again later."
-            });
-        }
+    // Call API with timeout
+    const apiUrl = `https://apis-keith.vercel.app/download/dlmp3?url=${encodeURIComponent(video.url)}`;
+    const response = await axios.get(apiUrl, { timeout: 15000 });
+    const result = response?.data?.result;
 
-        const audioUrl = data.result.downloadUrl;
-        const title = data.result.title;
+    if (!response.data?.status || !result?.downloadUrl)
+      return sock.sendMessage(chatId, { text: "❌ Failed to fetch audio from API." });
 
-        // Send the audio
-        await sock.sendMessage(chatId, {
-            audio: { url: audioUrl },
-            mimetype: "audio/mpeg",
-            fileName: `${title}.mp3`
-        }, { quoted: message });
+    const title = result.title || video.title || 'Unknown Song';
 
-    } catch (error) {
-        console.error('Error in song2 command:', error);
-        await sock.sendMessage(chatId, { 
-            text: "Download failed. Please try again later."
-        });
-    }
+    // Send audio
+    await sock.sendMessage(
+      chatId,
+      {
+        audio: { url: result.downloadUrl },
+        mimetype: "audio/mpeg",
+        fileName: `${title}.mp3`,
+        caption: `🎵 *Title:* ${title}\n🎶 *Quality:* MP3`
+      },
+      { quoted: message }
+    );
+
+  } catch (error) {
+    console.error('Error in play command:', error);
+    await sock.sendMessage(chatId, { text: "❌ Download failed. Try again later." });
+  }
 }
 
-module.exports = playCommand; 
-
-/*Powered by KNIGHT-BOT*
-*Credits to Keith MD*`*/
-
+module.exports = playCommand;
