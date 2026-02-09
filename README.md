@@ -19,10 +19,9 @@
   <a href="https://whatsapp.com/channel/0029Vb2J9C91dAw7vxA75y2V">
     <img title="Join WhatsApp Channel" src="https://img.shields.io/badge/Join-WhatsApp%20Channel-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" />
 
-
-## 🧚‍♂️ CHARLESKE'S DEPLOYMENT OPTIONS
+## 🧚‍♂️ WEED MD DEPLOYMENT OPTIONS
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Black+Ops+One&size=45&pause=1000&color=00FFFF&center=true&vCenter=true&width=1000&lines=LIST-DEPLOY+NOW;Modern+Bot+DEPLOY+GUIDE" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Black+Ops+One&size=45&pause=1000&color=39FF14&center=true&vCenter=true&width=1000&lines=LIST-DEPLOY+NOW;" alt="Typing SVG" />
 </p>
 
 ### 🔹 DEPLOY ON HEROKU
@@ -49,4 +48,4 @@
 [![Support](https://img.shields.io/badge/➤Support-FFD700?style=for-the-badge&logoColor=black)](https://charleske-surpot.vercel.app/)
 
 
-## 👨‍💻 Developer Support 🇰🇪
+## 👨‍💻 Developer Support 🙏
