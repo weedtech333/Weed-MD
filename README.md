@@ -42,8 +42,22 @@
 - **TALKDROVE:**  
 [![Deploy Now](https://img.shields.io/badge/➤Deploy-Talkdrove-FF1493?style=for-the-badge&logoColor=white)](https://host.talkdrove.com/auth/signup?ref=7D90F312)
 
-- **SUPPORT:**  
-[![Support](https://img.shields.io/badge/➤Support-FFD700?style=for-the-badge&logoColor=black)](
+- **SUPPORT:**
+- 
+## 📞 Contact & Support
 
+### Project Owner: Erfan Ahmad
+<a href='https://wa.me/+923306137477?text=*HELLO+ERFAN+AHMAD+ɪ+ɴᴇᴇᴅ+ʜᴇʟᴘ!.+ɪ+ᴍᴇssᴀɢᴇᴅ+ʏᴏᴜ+ғʀᴏᴍ+DARKZONE-MD+ʀᴇᴘᴏ!!*' target="_blank">
+  <img alt='WhatsApp' src='https://img.shields.io/badge/Contact_Owner-39FF14?style=for-the-badge&logo=whatsapp&logoColor=white'/>
+</a>
 
-## 👨‍💻 Developer Support 🙏
+### Join Our Community
+<a href="https://chat.whatsapp.com/H27rbX1EFLEJoQPrQD4WiO">
+  <img src="https://img.shields.io/badge/Join_Group-00FFFF?style=for-the-badge&logo=whatsapp" alt="WhatsApp Group"/>
+</a>
+<a href="https://whatsapp.com/channel/0029Vb5dDVO59PwTnL86j13J">
+  <img src="https://img.shields.io/badge/Join_Channel-FFFF33?style=for-the-badge&logo=whatsapp" alt="WhatsApp Channel"/>
+</a>
+
+</div>
+
