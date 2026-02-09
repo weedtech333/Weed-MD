@@ -146,8 +146,8 @@ const soraCommand = require('./commands/sora');
 // Global settings
 global.packname = settings.packname;
 global.author = settings.author;
-global.channelLink = "🍭";
-global.ytch = "Mr Unique Hacker";
+global.channelLink = "";
+global.ytch = "Weed Tech";
 
 // Add this near the top of main.js with other global configurations
 const channelInfo = {
@@ -155,8 +155,8 @@ const channelInfo = {
         forwardingScore: 1,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363161513685998@newsletter',
-            newsletterName: 'KnightBot MD',
+            newsletterJid: '120363407561123100@newsletter',
+            newsletterName: 'Weed MD',
             serverMessageId: -1
         }
     }
@@ -197,7 +197,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
 
             if (buttonId === 'channel') {
                 await sock.sendMessage(chatId, {
-                    text: '📢 *Join our Channel:*\n🍭'
+                    text: '📢 *Join our Channel:*\n'
                 }, { quoted: message });
                 return;
             } else if (buttonId === 'owner') {
@@ -206,7 +206,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 return;
             } else if (buttonId === 'support') {
                 await sock.sendMessage(chatId, {
-                    text: `🔗 *Support*\n\nhttps://chat.whatsapp.com/GA4WrOFythU6g3BFVubYM7?mode=wwt`
+                    text: `🔗 *Support*\n\nhttps://chat.whatsapp.com/KfYnvgj0JTqErxKc0RTNNu?mode=gi_t`
                 }, { quoted: message });
                 return;
             }
