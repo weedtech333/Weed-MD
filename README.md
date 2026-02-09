@@ -1,9 +1,9 @@
+<img src="https://i.imgur.com/dBaSKWF.gif" height="90" width="100%">
 
 <p align="center">
   <a href="https://git.io/typing-svg">
     <img src="https://readme-typing-svg.demolab.com?font=Black+Ops+One&size=80&pause=1000&color=8A2BE2&center=true&vCenter=true&width=1000&height=200&lines=WEED-MD;VERSION+2025;BY+Weed+Tech" alt=""
 
-<img src="https://i.imgur.com/dBaSKWF.gif" height="90" width="100%">
 
 ---
 
