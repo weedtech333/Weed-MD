@@ -1,55 +1,69 @@
-const yts = require('yt-search');
-const axios = require('axios');
+module.exports = async (context) => {
+    const { client, m, text, fetchJson } = context;
+    const yts = require("yt-search");
 
-async function playCommand(sock, chatId, message) {
-  try {
-    // Get text safely
-    const text =
-      message?.message?.conversation ||
-      message?.message?.extendedTextMessage?.text ||
-      '';
+    try {
+        if (!text) return m.reply("What song do you want to download?");
 
-    const args = text.trim().split(/\s+/).slice(1);
-    const searchQuery = args.join(' ');
+        const { videos } = await yts(text);
+        if (!videos || videos.length === 0) {
+            return m.reply("No songs found!");
+        }
 
-    if (!searchQuery)
-      return sock.sendMessage(chatId, { text: "❌ Please enter a song name!" });
+        const urlYt = videos[0].url;
 
-    // Search YouTube
-    const search = await yts(searchQuery);
-    const video = search.videos?.[0];
-    if (!video)
-      return sock.sendMessage(chatId, { text: "❌ No songs found!" });
+        try {
 
-    // Loading message
-    await sock.sendMessage(chatId, { text: "_⏳ Downloading your song, please wait..._" });
+                    let data = await fetchJson(`https://api.dreaded.site/api/ytdl/audio?url=${urlYt}`);
 
-    // Call API with timeout
-    const apiUrl = `https://apis-keith.vercel.app/download/dlmp3?url=${encodeURIComponent(video.url)}`;
-    const response = await axios.get(apiUrl, { timeout: 15000 });
-    const result = response?.data?.result;
 
-    if (!response.data?.status || !result?.downloadUrl)
-      return sock.sendMessage(chatId, { text: "❌ Failed to fetch audio from API." });
 
-    const title = result.title || video.title || 'Unknown Song';
+        const {
+            metadata: { title, thumbnail, duration, author },
+            download: { url: audioUrl, quality, filename },
+        } = data.result;
 
-    // Send audio
-    await sock.sendMessage(
-      chatId,
-      {
-        audio: { url: result.downloadUrl },
-        mimetype: "audio/mpeg",
-        fileName: `${title}.mp3`,
-        caption: `🎵 *Title:* ${title}\n🎶 *Quality:* MP3`
-      },
-      { quoted: message }
-    );
 
-  } catch (error) {
-    console.error('Error in play command:', error);
-    await sock.sendMessage(chatId, { text: "❌ Download failed. Try again later." });
-  }
-}
 
-module.exports = playCommand;
+        await m.reply(`_Downloading ${title}_`);
+
+        await client.sendMessage(
+            m.chat,
+            {
+                document: { url: audioUrl },
+                mimetype: "audio/mpeg",
+                fileName: `${filename}.mp3`,
+            },
+            { quoted: m }
+        );
+        } catch (primaryError) {
+            console.error("Primary API failed:", primaryError.message);
+
+
+            try {
+                const fallbackData = await fetchJson(`https://api.dreaded.site/api/ytdl2/audio?url=${urlYt}`);
+                if (!fallbackData || !fallbackData.result || !fallbackData.result.downloadUrl) {
+                    throw new Error("Invalid response from fallback API");
+                }
+
+                const { title: name, downloadUrl: audio } = fallbackData.result;
+
+                await m.reply(`_Downloading ${name}_`);
+                await client.sendMessage(
+                    m.chat,
+                    {
+                        document: { url: audio },
+                        mimetype: "audio/mpeg",
+                        fileName: `${name}.mp3`,
+                    },
+                    { quoted: m }
+                );
+            } catch (fallbackError) {
+                console.error("Fallback API failed:", fallbackError.message);
+                m.reply("Download failed: Unable to retrieve audio from both APIs.");
+            }
+        }
+    } catch (error) {
+        m.reply("Download failed\n" + error.message);
+    }
+};
